@@ -95,7 +95,7 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.05fr 1fr;
+      grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.22fr);
       gap: 26px;
       align-items: end;
     }
@@ -107,7 +107,9 @@
     }
 
     .metric {
-      padding: 18px;
+      min-width: 0;
+      overflow: hidden;
+      padding: 18px 14px;
       border: 1px solid rgba(255, 255, 255, 0.10);
       border-radius: 16px;
       background: rgba(0, 0, 0, 0.24);
@@ -116,8 +118,10 @@
     .metric strong {
       display: block;
       color: var(--green);
-      font-size: clamp(34px, 5vw, 54px);
+      font-size: clamp(30px, 3.8vw, 48px);
       line-height: 1;
+      white-space: nowrap;
+      letter-spacing: -0.04em;
     }
 
     .metric span {
