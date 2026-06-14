@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="2026 世界杯 F 组荷兰 vs 日本赛前 AI 判断与完整数据分析。">
+  <meta name="theme-color" content="#06100b">
+  <title>荷兰 vs 日本｜2026 世界杯 F 组赛前 AI 分析报告</title>
+  <style>
+    :root {
+      --bg: #06100b;
+      --line: rgba(122, 255, 172, 0.16);
+      --line-strong: rgba(122, 255, 172, 0.34);
+      --text: #eef8ef;
+      --muted: #8fb49b;
+      --soft: #c9ddce;
+      --green: #4dff88;
+      --green-deep: #128744;
+      --gold: #ffc940;
+      --gold-soft: #ffe19a;
+      --red: #ff5c64;
+      --blue: #3d86ff;
+      --white: #f8fbff;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+      --radius: 18px;
+      --focus-ring: 0 0 0 3px rgba(77, 255, 136, 0.45);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 72px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Segoe UI", Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+      background:
+        radial-gradient(ellipse 90% 52% at 50% -18%, rgba(77, 255, 136, 0.18), transparent 64%),
+        radial-gradient(ellipse 58% 44% at 94% 96%, rgba(255, 201, 64, 0.10), transparent 62%),
+        linear-gradient(160deg, #030805 0%, #07130d 42%, #0d1b14 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -4;
+      background-image:
+        linear-gradient(rgba(122, 255, 172, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(122, 255, 172, 0.035) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.75) 45%, transparent 100%);
+    }
+
+    .stadium-glow, .grain, .particles, .pitch {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .stadium-glow {
+      z-index: -5;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(61, 134, 255, 0.13), transparent 28%),
+        radial-gradient(circle at 78% 24%, rgba(255, 92, 100, 0.13), transparent 30%);
+      animation: breathe 8s ease-in-out infinite;
+    }
+
+    .pitch { z-index: -3; opacity: 0.88; }
+    .pitch line, .pitch rect, .pitch circle, .pitch path {
+      fill: none;
+      stroke: rgba(122, 255, 172, 0.075);
+      stroke-width: 2;
+    }
+    .pitch .sweep {
+      stroke: rgba(77, 255, 136, 0.26);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 210 1320;
+      animation: radar 13s linear infinite;
+    }
+
+    .grain {
+      z-index: -1;
+      opacity: 0.18;
+      background-image:
+        radial-gradient(circle at 30% 20%, rgba(255,255,255,0.18) 0 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.12) 0 1px, transparent 1px);
+      background-size: 95px 95px, 133px 133px;
+    }
+
+    .particles { z-index: -2; overflow: hidden; }
+    .particles span {
+      position: absolute;
+      bottom: -10px;
+      width: 3px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--green);
+      opacity: 0;
+      box-shadow: 0 0 13px rgba(77,255,136,0.75);
+      animation: floatUp linear infinite;
+    }
+    .particles span:nth-child(3n) {
+      background: var(--gold);
+      box-shadow: 0 0 13px rgba(255,201,64,0.65);
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+    @keyframes radar { to { stroke-dashoffset: -1530; } }
+    @keyframes floatUp {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      8% { opacity: 0.55; }
+      70% { opacity: 0.24; }
+      100% { transform: translateY(-108vh) translateX(var(--drift)); opacity: 0; }
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes verdictPop {
+      0% { opacity: 0; transform: scale(0.88) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(77,255,136,0.35), 0 24px 80px rgba(77,255,136,0.18); }
+      50% { box-shadow: 0 0 0 12px rgba(77,255,136,0), 0 28px 90px rgba(77,255,136,0.28); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+      .particles { display: none; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+    }
+
+    @media print {
+      html { scroll-behavior: auto; }
+      body {
+        background: #06100b !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page {
+        display: block !important;
+        break-after: page;
+      }
+      #page-detail { break-after: auto; }
+      .landing-actions,
+      .sticky-nav,
+      .detail-actions,
+      .toast,
+      .particles {
+        display: none !important;
+      }
+      .wrap { width: min(1120px, calc(100% - 28px)); }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      .bar span { transform: scaleX(1) !important; }
+    }
+
+    .page {
+      display: none;
+      animation: pageIn 480ms ease both;
+    }
+    .page.is-active { display: block; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 46px;
+    }
+
+    .glass {
+      background: linear-gradient(180deg, rgba(16, 42, 26, 0.83), rgba(8, 24, 15, 0.72));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green), #9dffbd);
+      box-shadow: 0 0 34px rgba(77,255,136,0.35);
+    }
+    .brand-mark::before, .brand-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: inherit;
+      border: 1px solid rgba(6, 16, 11, 0.44);
+    }
+    .brand-mark::before { inset: 9px; border-radius: 50%; }
+    .brand-mark::after { width: 1px; height: 28px; background: rgba(6, 16, 11, 0.38); }
+
+    .brand-name { font-size: 18px; font-weight: 950; letter-spacing: 0.14em; }
+    .brand-sub, .top-meta, .label {
+      font-family: "Cascadia Code", "Courier New", Consolas, monospace;
+    }
+    .brand-sub {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+    }
+    .top-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+      text-align: right;
+    }
+    .top-meta b { color: var(--gold); }
+
+    /* ===== Page 1: Verdict ===== */
+    .landing {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      padding: 28px 0 10px;
+      min-height: calc(100vh - 120px);
+    }
+
+    .matchup {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: clamp(12px, 3vw, 28px);
+      align-items: center;
+      padding: clamp(24px, 5vw, 42px);
+    }
+
+    .team-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+
+    .team-side.winner .team-name {
+      color: var(--green);
+      text-shadow: 0 0 28px rgba(77,255,136,0.35);
+    }
+
+    .team-side.winner .flag {
+      border-color: rgba(77,255,136,0.55);
+      box-shadow: 0 0 0 2px rgba(77,255,136,0.22), 0 18px 45px rgba(0,0,0,0.35);
+    }
+
+    .winner-badge {
+      display: none;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--green);
+      color: #06100b;
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+    }
+    .team-side.winner .winner-badge { display: inline-flex; }
+
+    .flag {
+      display: grid;
+      place-items: center;
+      width: min(100%, 180px);
+      aspect-ratio: 3 / 2;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+      background: #fff;
+      transition: border-color 280ms ease, box-shadow 280ms ease;
+    }
+    .flag img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .flag-emoji {
+      display: none;
+      font-size: 72px;
+      line-height: 1;
+    }
+
+    .team-name {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+    .team-code {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.2em;
+    }
+
+    .vs-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .vs-ring {
+      display: grid;
+      place-items: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,201,64,0.35);
+      color: var(--gold);
+      font-size: 22px;
+      font-weight: 950;
+      background: rgba(255,201,64,0.08);
+    }
+    .vs-meta {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .verdict-panel {
+      padding: clamp(28px, 5vw, 48px);
+      text-align: center;
+    }
+
+    .verdict-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,201,64,0.38);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+    }
+
+    .verdict-main {
+      margin-top: 22px;
+      font-size: clamp(56px, 14vw, 120px);
+      line-height: 0.92;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      color: var(--green);
+      text-shadow: 0 0 48px rgba(77,255,136,0.35);
+      animation: verdictPop 680ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+    }
+
+    .verdict-sub {
+      margin-top: 14px;
+      color: var(--soft);
+      font-size: clamp(16px, 3vw, 20px);
+      line-height: 1.6;
+    }
+
+    .settlement-block {
+      display: inline-grid;
+      gap: 6px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(77,255,136,0.24);
+      background: rgba(77,255,136,0.065);
+      text-align: center;
+    }
+    .settlement-block strong {
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+    }
+    .settlement-block span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .outcome-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 32px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .outcome-card {
+      position: relative;
+      padding: 18px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      text-align: center;
+      transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    }
+
+    .outcome-card .outcome-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 10px;
+      border-radius: 12px;
+      font-size: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .outcome-card .outcome-text {
+      font-size: 16px;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+
+    .outcome-card .outcome-hint {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .outcome-card.is-pick {
+      border-color: rgba(77,255,136,0.55);
+      background: linear-gradient(180deg, rgba(77,255,136,0.16), rgba(77,255,136,0.06));
+      transform: scale(1.04);
+      animation: glowPulse 2.8s ease-in-out infinite;
+    }
+
+    .outcome-card.is-pick .outcome-icon {
+      background: var(--green);
+      color: #06100b;
+      border-color: transparent;
+      font-weight: 950;
+    }
+
+    .outcome-card.is-pick .outcome-text { color: var(--green); }
+
+    .outcome-card.is-pick::after {
+      content: "AI 判断";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      translate: -50% 0;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #130f02;
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+
+    .outcome-card.is-dim {
+      opacity: 0.55;
+    }
+
+    .landing-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .meta-chip {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      text-align: center;
+    }
+    .meta-chip strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .landing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 50px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 14px;
+      font: inherit;
+      font-weight: 950;
+      letter-spacing: 0.06em;
+      color: #161101;
+      background: linear-gradient(135deg, var(--gold), #ff9f2e);
+      cursor: pointer;
+      box-shadow: 0 12px 34px rgba(255,201,64,0.22);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+      text-decoration: none;
+    }
+    @media (hover: hover) {
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 45px rgba(255,201,64,0.30);
+      }
+    }
+    .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .btn.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+    .btn.ghost {
+      color: var(--soft);
+      background: transparent;
+      border: 1px solid var(--line);
+      box-shadow: none;
+      min-height: 42px;
+      font-size: 14px;
+    }
+
+    /* ===== Page 2: Detail ===== */
+    .detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0 18px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .detail-verdict-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(77,255,136,0.35);
+      background: rgba(77,255,136,0.1);
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 950;
+    }
+    .detail-verdict-group {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+    .detail-settlement {
+      margin-top: 0;
+      text-align: right;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 0 14px;
+      scrollbar-width: none;
+    }
+    .sticky-nav::-webkit-scrollbar { display: none; }
+    .sticky-nav a {
+      flex: 0 0 auto;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--soft);
+      background: rgba(8, 24, 15, 0.72);
+      backdrop-filter: blur(12px);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .sticky-nav a:hover,
+    .sticky-nav a.is-active {
+      color: #06100b;
+      background: var(--green);
+      border-color: transparent;
+    }
+
+    .card {
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+    @media (hover: hover) {
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: var(--line-strong);
+        box-shadow: 0 26px 80px rgba(0,0,0,0.5);
+      }
+    }
+
+    .section-block {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 420px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 32px 0 14px;
+    }
+    .section-title .num {
+      color: var(--green);
+      font-size: 28px;
+      font-weight: 950;
+    }
+    .section-title h2 {
+      font-size: clamp(20px, 4.5vw, 30px);
+      letter-spacing: -0.03em;
+    }
+    .section-title .line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 560ms ease, transform 560ms ease;
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 92px minmax(0, 1fr);
+      gap: 14px;
+      padding: clamp(18px, 3.2vw, 30px);
+    }
+
+    .team {
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+    }
+    .team::after {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      right: -120px;
+      bottom: -120px;
+      border-radius: 50%;
+      opacity: 0.76;
+      filter: blur(2px);
+      pointer-events: none;
+    }
+    .team.ned::after {
+      background: radial-gradient(circle, rgba(255,201,64,0.36), rgba(255,92,100,0.24), transparent 65%);
+    }
+    .team.jpn::after {
+      background: radial-gradient(circle, rgba(255,255,255,0.30), rgba(255,92,100,0.20), transparent 65%);
+    }
+    .team h3 {
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+    .team p {
+      position: relative;
+      z-index: 1;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    .vs-block {
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--gold);
+      background: rgba(255,201,64,0.07);
+      border: 1px solid rgba(255,201,64,0.24);
+      font-size: 36px;
+      font-weight: 950;
+    }
+
+    .grid { display: grid; gap: 14px; }
+    .prob-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .stat-card, .goal-card, .score-card, .note-card, .service-card { padding: 18px; }
+
+    .big-number {
+      font-size: clamp(38px, 8vw, 56px);
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+      font-variant-numeric: tabular-nums;
+    }
+    .card-title {
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 950;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .bar {
+      width: 100%;
+      height: 10px;
+      margin-top: 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .bar span {
+      display: block;
+      width: var(--w, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green-deep), var(--green));
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .bar.is-animated span { transform: scaleX(1); }
+    .bar.gold span { background: linear-gradient(90deg, var(--gold), var(--gold-soft)); }
+    .bar.red span { background: linear-gradient(90deg, var(--red), #ffadb2); }
+
+    .goal-layout {
+      display: grid;
+      grid-template-columns: 0.94fr 1.06fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .goal-stack { display: grid; gap: 12px; }
+    .goal-card {
+      display: grid;
+      gap: 10px;
+      min-height: 138px;
+    }
+    .goal-card .big-number { font-size: clamp(42px, 6vw, 58px); }
+    .goal-card .card-title { margin-top: 0; font-size: 21px; }
+    .goal-card.featured {
+      border-color: rgba(255,201,64,0.48);
+      box-shadow: 0 22px 72px rgba(255,201,64,0.10);
+    }
+    .goal-badge {
+      display: inline-flex;
+      margin-bottom: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #130f02;
+      background: var(--gold);
+      font-size: 11px;
+      font-weight: 950;
+    }
+    .goal-visual {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      gap: 22px;
+      min-height: 320px;
+      padding: clamp(24px, 4vw, 36px);
+      align-content: space-between;
+      align-self: stretch;
+    }
+    .goal-visual::before {
+      content: "";
+      position: absolute;
+      inset: auto 28px -34%;
+      height: 78%;
+      border-radius: 50%;
+      border: 1px solid rgba(122,255,172,0.18);
+    }
+    .goal-visual::after {
+      content: "";
+      position: absolute;
+      right: -18%;
+      top: -18%;
+      width: 60%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 12px solid rgba(77,255,136,0.05);
+      pointer-events: none;
+    }
+    .goal-copy,
+    .goal-summary {
+      position: relative;
+      z-index: 1;
+    }
+    .goal-visual h3 {
+      max-width: 560px;
+      margin-top: 16px;
+      font-size: clamp(34px, 4.6vw, 56px);
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+    }
+    .goal-visual h3 span,
+    .goal-visual h3 strong {
+      display: block;
+    }
+    .goal-visual h3 strong {
+      color: var(--green);
+      text-shadow: 0 0 28px rgba(77,255,136,0.26);
+    }
+    .goal-visual p {
+      max-width: 620px;
+      margin-top: 18px;
+      font-size: 16px;
+      line-height: 1.9;
+    }
+    .goal-summary {
+      display: inline-grid;
+      grid-template-columns: auto auto;
+      align-items: end;
+      justify-self: start;
+      gap: 4px 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(77,255,136,0.24);
+      background: rgba(77,255,136,0.075);
+    }
+    .goal-summary span {
+      grid-column: 1 / -1;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+    }
+    .goal-summary strong {
+      color: var(--white);
+      font-size: 38px;
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+    }
+    .goal-summary small {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      color: #06100b;
+      background: var(--gold);
+      border-radius: 6px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .score-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .score-line {
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+    }
+    .tag {
+      display: inline-flex;
+      margin-top: 13px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--soft);
+      background: rgba(255,255,255,0.045);
+      font-size: 12px;
+      font-weight: 950;
+    }
+    .tag.primary { color: #130f02; background: var(--gold); border-color: transparent; }
+    .tag.cool {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue), var(--red));
+      border-color: transparent;
+    }
+
+    .note-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .note-card { min-height: 190px; }
+    .note-index {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      color: var(--green);
+      border: 1px solid rgba(77,255,136,0.26);
+      background: rgba(77,255,136,0.08);
+      font-weight: 950;
+    }
+
+    .risk-service { grid-template-columns: 1fr; }
+    .list {
+      display: grid;
+      gap: 11px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .list li {
+      position: relative;
+      padding-left: 20px;
+      color: var(--soft);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.74em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 16px rgba(77,255,136,0.7);
+    }
+    .risk .list li::before {
+      background: var(--red);
+      box-shadow: 0 0 16px rgba(255,92,100,0.7);
+    }
+
+    .service-card { margin-top: 14px; }
+    .disclaimer {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 14px;
+      color: var(--muted);
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 50;
+      translate: -50% 120%;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line-strong);
+      background: rgba(8, 24, 15, 0.94);
+      backdrop-filter: blur(14px);
+      color: var(--soft);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+      transition: translate 280ms ease;
+      pointer-events: none;
+    }
+    .toast.is-show { translate: -50% 0; }
+
+    @media (max-width: 930px) {
+      .matchup { grid-template-columns: 1fr; }
+      .vs-center { order: -1; flex-direction: row; gap: 12px; }
+      .vs-ring { width: 56px; height: 56px; font-size: 18px; }
+      .board, .goal-layout, .risk-service { grid-template-columns: 1fr; }
+      .vs-block { min-height: 68px; }
+      .prob-grid, .score-grid, .note-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .note-grid .note-card:last-child { grid-column: 1 / -1; }
+      .landing-meta { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 22px, 1120px); }
+      .particles { display: none; }
+      .stadium-glow { animation: none; opacity: 0.72; }
+      .pitch { opacity: 0.56; }
+      .glass {
+        background: linear-gradient(180deg, rgba(16, 42, 26, 0.92), rgba(8, 24, 15, 0.84));
+        backdrop-filter: none;
+      }
+      .sticky-nav a,
+      .toast {
+        backdrop-filter: none;
+      }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .top-meta { text-align: left; }
+      .outcome-row { grid-template-columns: 1fr; }
+      .outcome-card.is-pick { transform: none; }
+      .outcome-card.is-dim { display: none; }
+      .verdict-main { font-size: clamp(48px, 18vw, 72px); }
+      .landing-actions .btn { width: 100%; }
+      .detail-actions .btn { flex: 1 1 0; }
+      .prob-grid, .score-grid, .note-grid { grid-template-columns: 1fr; }
+      .goal-visual {
+        min-height: 0;
+        padding: 24px;
+      }
+      .goal-visual h3 {
+        font-size: clamp(34px, 12vw, 46px);
+      }
+      .goal-summary {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .detail-header { flex-direction: column; align-items: stretch; }
+      .detail-verdict-group,
+      .detail-verdict-chip {
+        justify-items: stretch;
+        justify-content: center;
+      }
+      .detail-settlement {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stadium-glow" aria-hidden="true"></div>
+  <svg class="pitch" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect x="120" y="70" width="1200" height="760" rx="18"></rect>
+    <line x1="720" y1="70" x2="720" y2="830"></line>
+    <circle cx="720" cy="450" r="228"></circle>
+    <circle cx="720" cy="450" r="7"></circle>
+    <rect x="120" y="260" width="186" height="380"></rect>
+    <rect x="1134" y="260" width="186" height="380"></rect>
+    <rect x="120" y="340" width="78" height="220"></rect>
+    <rect x="1242" y="340" width="78" height="220"></rect>
+    <path d="M306 340 A150 150 0 0 1 306 560"></path>
+    <path d="M1134 340 A150 150 0 0 0 1134 560"></path>
+    <circle class="sweep" cx="720" cy="450" r="228"></circle>
+  </svg>
+  <div class="particles" id="particles" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ========== 第一页：对阵 + 胜负平结论 ========== -->
+  <div class="page is-active" id="page-home" data-page="home">
+    <main class="wrap">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
+          <div>
+            <div class="brand-name">绿茵情报站</div>
+            <div class="brand-sub">WORLD CUP 26 · AI MATCH VERDICT</div>
+          </div>
+        </div>
+        <div class="top-meta">
+          <time datetime="2026-06-15T04:00+08:00">2026 世界杯 F 组</time><br>
+          <b>北京时间 6月15日 04:00</b>
+        </div>
+      </header>
+
+      <div class="landing">
+        <section class="matchup glass" aria-label="对阵">
+          <div class="team-side winner" id="home-ned">
+            <span class="winner-badge">AI 倾向</span>
+            <div class="flag">
+              <img src="https://flagcdn.com/w320/nl.png" alt="荷兰国旗" width="320" height="213" decoding="async">
+              <span class="flag-emoji" aria-hidden="true">🇳🇱</span>
+            </div>
+            <div class="team-name">荷兰</div>
+            <div class="team-code">NED</div>
+          </div>
+
+          <div class="vs-center">
+            <div class="vs-ring" aria-hidden="true">VS</div>
+            <div class="vs-meta">达拉斯 AT&amp;T Stadium</div>
+          </div>
+
+          <div class="team-side" id="home-jpn">
+            <span class="winner-badge">AI 倾向</span>
+            <div class="flag">
+              <img src="https://flagcdn.com/w320/jp.png" alt="日本国旗" width="320" height="213" decoding="async">
+              <span class="flag-emoji" aria-hidden="true">🇯🇵</span>
+            </div>
+            <div class="team-name">日本</div>
+            <div class="team-code">JPN</div>
+          </div>
+        </section>
+
+        <section class="verdict-panel glass" aria-labelledby="verdict-title">
+          <span class="verdict-label">AI 赛前判断 · 胜平负</span>
+          <h1 class="verdict-main" id="verdict-title">荷兰胜</h1>
+          <div class="settlement-block" aria-label="本场结算方向">
+            <strong>本场结算方向：荷兰胜</strong>
+            <span>比分概率与总进球倾向仅作为附加分析参考，不参与结算判断。</span>
+          </div>
+          <p class="verdict-sub">荷兰略占优势，整体判断为<strong>荷兰不败，倾向小胜；平局风险较高</strong></p>
+
+          <div class="outcome-row" role="group" aria-label="胜平负判断">
+            <div class="outcome-card is-pick" data-outcome="win-ned">
+              <div class="outcome-icon">胜</div>
+              <div class="outcome-text">荷兰胜</div>
+              <div class="outcome-hint">AI 最终判断</div>
+            </div>
+            <div class="outcome-card is-dim" data-outcome="draw">
+              <div class="outcome-icon">平</div>
+              <div class="outcome-text">平局</div>
+              <div class="outcome-hint">备选方向</div>
+            </div>
+            <div class="outcome-card is-dim" data-outcome="win-jpn">
+              <div class="outcome-icon">负</div>
+              <div class="outcome-text">日本胜</div>
+              <div class="outcome-hint">备选方向</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="landing-meta">
+          <div class="meta-chip">
+            <span class="label">参考比分</span>
+            <strong>1 : 0 / 1 : 1 / 0 : 0</strong>
+          </div>
+          <div class="meta-chip">
+            <span class="label">总进球</span>
+            <strong>0 - 2 球</strong>
+          </div>
+          <div class="meta-chip">
+            <span class="label">风险等级</span>
+            <strong>中等偏高</strong>
+          </div>
+        </div>
+
+        <div class="landing-actions">
+          <button class="btn" id="goDetail" type="button">
+            查看完整数据分析
+            <span aria-hidden="true">→</span>
+          </button>
+          <button class="btn secondary" id="copyVerdict" type="button">复制判断结论</button>
+          <button class="btn secondary" data-download-pdf type="button">下载PDF</button>
+        </div>
+      </div>
+
+      <footer class="disclaimer">
+        本报告仅作为足球赛前数据分析与娱乐参考，不构成任何决策建议或结果承诺，不保证赛果命中，赛果存在不确定性。
+      </footer>
+    </main>
+  </div>
+
+  <!-- ========== 第二页：完整分析 ========== -->
+  <div class="page" id="page-detail" data-page="detail">
+    <main class="wrap">
+      <div class="detail-header">
+        <div class="detail-actions">
+          <button class="btn ghost" id="goHome" type="button">← 返回结论页</button>
+          <button class="btn secondary" data-download-pdf type="button">下载PDF</button>
+        </div>
+        <div class="detail-verdict-group">
+          <div class="detail-verdict-chip">
+            <span aria-hidden="true">⚽</span>
+            本场判断：荷兰胜
+          </div>
+          <div class="settlement-block detail-settlement" aria-label="本场结算方向">
+            <strong>本场结算方向：荷兰胜</strong>
+            <span>比分概率与总进球倾向仅作为附加分析参考，不参与结算判断。</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sticky-nav" aria-label="报告章节导航">
+        <a href="#teams">对阵</a>
+        <a href="#probability">概率</a>
+        <a href="#goals">进球</a>
+        <a href="#scores">比分</a>
+        <a href="#analysis">分析</a>
+        <a href="#risk">风险</a>
+      </nav>
+
+      <section class="section-block reveal" id="teams-section" aria-labelledby="teams">
+        <div class="section-title">
+          <span class="num">01</span>
+          <h2 id="teams">对阵情报台</h2>
+          <div class="line" aria-hidden="true"></div>
+        </div>
+        <div class="board glass">
+          <article class="team ned card">
+            <div class="flag" aria-label="荷兰国旗">
+              <img src="https://flagcdn.com/w320/nl.png" alt="荷兰国旗" width="320" height="213" loading="lazy" decoding="async">
+              <span class="flag-emoji" aria-hidden="true">🇳🇱</span>
+            </div>
+            <h3>荷兰 NED</h3>
+            <p>荷兰拥有更高的阵容上限和比赛控制能力。范戴克的后场统领、德容的中场节奏、加克波和马伦等人的前场冲击，使球队具备通过控球和边路推进持续制造机会的能力。不过荷兰并非没有隐患，前场终结稳定性、部分伤病疲劳和首战节奏都会影响优势兑现。</p>
+          </article>
+          <div class="vs-block" aria-hidden="true">VS</div>
+          <article class="team jpn card">
+            <div class="flag" aria-label="日本国旗">
+              <img src="https://flagcdn.com/w320/jp.png" alt="日本国旗" width="320" height="213" loading="lazy" decoding="async">
+              <span class="flag-emoji" aria-hidden="true">🇯🇵</span>
+            </div>
+            <h3>日本 JPN</h3>
+            <p>日本这支球队已经具备很强的欧洲化比赛强度，压迫、快速转移和二次进攻都能给强队制造麻烦。三笘薰、远藤航、南野拓实等伤病信号削弱了阵容完整度，但久保建英、堂安律、上田绮世、镰田大地等人仍能维持技术和转换质量，日本不会只是被动防守的一方。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block reveal" id="probability" aria-labelledby="prob-title">
+        <div class="section-title">
+          <span class="num">02</span>
+          <h2 id="prob-title">胜平负概率</h2>
+          <div class="line" aria-hidden="true"></div>
+        </div>
+        <div class="grid prob-grid">
+          <article class="stat-card glass card">
+            <div class="big-number" data-count="39" data-suffix="%">39%</div>
+            <div class="card-title">荷兰胜</div>
+            <p class="muted">荷兰略占优势，但领先幅度有限，更多是小胜或不败口径。</p>
+            <div class="bar" style="--w: 39%" role="progressbar" aria-valuenow="39" aria-valuemin="0" aria-valuemax="100" aria-label="荷兰胜 39%"><span></span></div>
+          </article>
+          <article class="stat-card glass card">
+            <div class="big-number" data-count="35" data-suffix="%">35%</div>
+            <div class="card-title">平局</div>
+            <p class="muted">平局概率接近荷兰胜，1:1 和 0:0 都需要提高权重。</p>
+            <div class="bar gold" style="--w: 35%" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="平局 35%"><span></span></div>
+          </article>
+          <article class="stat-card glass card">
+            <div class="big-number" data-count="26" data-suffix="%">26%</div>
+            <div class="card-title">日本胜</div>
+            <p class="muted">日本高压迫和转换质量仍能形成一定冷门空间。</p>
+            <div class="bar red" style="--w: 26%" role="progressbar" aria-valuenow="26" aria-valuemin="0" aria-valuemax="100" aria-label="日本胜 26%"><span></span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block reveal" id="goals-section" aria-labelledby="goals">
+        <div class="section-title">
+          <span class="num">03</span>
+          <h2 id="goals">总进球区间</h2>
+          <div class="line" aria-hidden="true"></div>
+        </div>
+        <div class="goal-layout">
+          <article class="goal-visual glass">
+            <div class="goal-copy">
+              <span class="hero-kicker">GOAL MODEL</span>
+              <h3>
+                <span>主区间锁定</span>
+                <strong>0-2球</strong>
+              </h3>
+              <p class="muted">参考已结束小组赛节奏，强队首轮慢热较多，低比分和平局权重上调。</p>
+            </div>
+            <div class="goal-summary" aria-label="0-2球区间概率 68%">
+              <span>主要倾向</span>
+              <strong>68%</strong>
+              <small>区间概率</small>
+            </div>
+          </article>
+          <div class="goal-stack">
+            <article class="goal-card glass card">
+              <div class="big-number" data-count="32" data-suffix="%">32%</div>
+              <div>
+                <div class="card-title">0-1球</div>
+                <p class="muted">强队首轮慢热和日本防守纪律，会增加 0:0 或 1:0 的低比分路径。</p>
+                <div class="bar gold" style="--w: 32%" role="progressbar" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100" aria-label="0-1球 32%"><span></span></div>
+              </div>
+            </article>
+            <article class="goal-card featured glass card">
+              <div class="big-number" data-count="36" data-suffix="%">36%</div>
+              <div>
+                <span class="goal-badge">主要倾向</span>
+                <div class="card-title">2球</div>
+                <p class="muted">1:1 或 2:0 都在合理区间，整体判断更偏低比分。</p>
+                <div class="bar" style="--w: 36%" role="progressbar" aria-valuenow="36" aria-valuemin="0" aria-valuemax="100" aria-label="2球 36%"><span></span></div>
+              </div>
+            </article>
+            <article class="goal-card glass card">
+              <div class="big-number" data-count="32" data-suffix="%">32%</div>
+              <div>
+                <div class="card-title">3球以上</div>
+                <p class="muted">只有早段进球打破谨慎节奏，比赛才更容易进入三球以上。</p>
+                <div class="bar red" style="--w: 32%" role="progressbar" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100" aria-label="3球以上 32%"><span></span></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block reveal" id="scores-section" aria-labelledby="scores">
+        <div class="section-title">
+          <span class="num">04</span>
+          <h2 id="scores">比分概率参考</h2>
+          <div class="line" aria-hidden="true"></div>
+        </div>
+        <div class="grid score-grid">
+          <article class="score-card glass card">
+            <div class="score-line">1:0</div>
+            <p class="muted">概率 20%</p>
+            <span class="tag primary">首选小胜</span>
+          </article>
+          <article class="score-card glass card">
+            <div class="score-line">1:1</div>
+            <p class="muted">概率 19%</p>
+            <span class="tag">重点防平</span>
+          </article>
+          <article class="score-card glass card">
+            <div class="score-line">0:0</div>
+            <p class="muted">概率 15%</p>
+            <span class="tag">低比分僵局</span>
+          </article>
+          <article class="score-card glass card">
+            <div class="score-line">2:1</div>
+            <p class="muted">概率 14%</p>
+            <span class="tag">次选路径</span>
+          </article>
+          <article class="score-card glass card">
+            <div class="score-line">0:1</div>
+            <p class="muted">概率 9%</p>
+            <span class="tag cool">防冷</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block reveal" id="analysis-section" aria-labelledby="analysis">
+        <div class="section-title">
+          <span class="num">05</span>
+          <h2 id="analysis">关键分析</h2>
+          <div class="line" aria-hidden="true"></div>
+        </div>
+        <div class="grid note-grid">
+          <article class="note-card glass card">
+            <div class="note-index" aria-hidden="true">1</div>
+            <p class="muted">荷兰整体阵容深度略高，但只能视为小幅优势，不宜放大成稳定胜势。</p>
+          </article>
+          <article class="note-card glass card">
+            <div class="note-index" aria-hidden="true">2</div>
+            <p class="muted">日本压迫速度快，能用高位逼抢和快速转换打乱荷兰出球节奏，冷门空间仍在。</p>
+          </article>
+          <article class="note-card glass card">
+            <div class="note-index" aria-hidden="true">3</div>
+            <p class="muted">参考已经结束的多场小组赛，强队首轮普遍慢热，低比分和平局偏多，因此本场提高平局和 0:0 权重。</p>
+          </article>
+          <article class="note-card glass card">
+            <div class="note-index" aria-hidden="true">4</div>
+            <p class="muted">若荷兰先取得进球，1:0 是更稳妥路径；若日本守住前段节奏，1:1 和 0:0 会明显升温。</p>
+          </article>
+          <article class="note-card glass card">
+            <div class="note-index" aria-hidden="true">5</div>
+            <p class="muted">综合口径为荷兰不败、倾向小胜，但荷兰胜和平局非常接近，结论需要保持谨慎。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block reveal grid risk-service" id="risk" aria-label="风险提示">
+        <article class="service-card risk glass card">
+          <span class="label">Risk Map</span>
+          <h2>风险提示</h2>
+          <ul class="list">
+            <li>日本的高压迫和转换速度可能迫使荷兰出现中后场失误。</li>
+            <li>荷兰前场终结效率不稳时，优势可能变成长时间控球但比分打不开。</li>
+            <li>日本关键伤病影响真实上限，但官方首发未出前仍存在不确定性。</li>
+            <li>首战心态、早段进球、定位球和临场伤停都会显著改变比分路径。</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="section-block reveal service-card glass">
+        <span class="label">Report Note</span>
+        <h2>服务说明</h2>
+        <p class="muted">本页面为 AI 辅助生成的赛前数据分析报告，结合球队状态、比赛风格、概率倾向与风险因素进行整理。报告内容用于球迷观赛前参考，不保证赛果命中。</p>
+      </section>
+
+      <footer class="disclaimer">
+        本报告仅作为足球赛前数据分析与娱乐参考，不构成任何决策建议或结果承诺，不保证赛果命中，赛果存在不确定性。
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (function () {
+      const VERDICT = {
+        outcome: "win-ned",
+        label: "荷兰胜",
+        summary: "荷兰 vs 日本赛前判断：荷兰不败，倾向小胜，平局风险较高。参考比分 1:0 / 1:1 / 0:0 / 2:1，总进球 0-2 球，风险等级中等偏高。"
+      };
+
+      const pageHome = document.getElementById("page-home");
+      const pageDetail = document.getElementById("page-detail");
+      const goDetail = document.getElementById("goDetail");
+      const goHome = document.getElementById("goHome");
+      const copyVerdict = document.getElementById("copyVerdict");
+      const downloadPdfButtons = document.querySelectorAll("[data-download-pdf]");
+      const toast = document.getElementById("toast");
+      const particles = document.getElementById("particles");
+      const navLinks = document.querySelectorAll(".sticky-nav a");
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const isMobile = window.matchMedia("(max-width: 620px)").matches;
+      const detailHashes = new Set(["#detail", "#teams", "#probability", "#goals", "#scores", "#analysis", "#risk"]);
+      let detailInitialized = false;
+
+      document.querySelectorAll(".flag img").forEach((image) => {
+        image.addEventListener("error", () => {
+          image.style.display = "none";
+          const fallback = image.nextElementSibling;
+          if (fallback) fallback.style.display = "block";
+        }, { once: true });
+      });
+
+      if (!prefersReducedMotion) {
+        const count = isMobile ? 0 : 18;
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < count; i += 1) {
+          const particle = document.createElement("span");
+          const size = 2 + Math.random() * 3;
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.setProperty("--drift", `${Math.random() * 110 - 55}px`);
+          particle.style.animationDuration = `${13 + Math.random() * 15}s`;
+          particle.style.animationDelay = `${-Math.random() * 24}s`;
+          fragment.appendChild(particle);
+        }
+        particles.appendChild(fragment);
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("is-show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => toast.classList.remove("is-show"), 1800);
+      }
+
+      function isDetailHash(hash) {
+        return detailHashes.has(hash);
+      }
+
+      function scrollToDetailHash(hash) {
+        if (!hash || hash === "#detail") return;
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+        }
+      }
+
+      function showPage(name, hash) {
+        const isDetail = name === "detail";
+        const targetHash = isDetail ? (hash || "#detail") : "#home";
+        const shouldScrollToAnchor = isDetail && targetHash !== "#detail";
+        pageHome.classList.toggle("is-active", !isDetail);
+        pageDetail.classList.toggle("is-active", isDetail);
+        document.title = isDetail
+          ? "完整分析｜荷兰 vs 日本"
+          : "荷兰 vs 日本｜2026 世界杯 F 组赛前 AI 分析报告";
+        if (!shouldScrollToAnchor) {
+          window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        }
+        if (isDetail && !detailInitialized) {
+          initDetailPage();
+          detailInitialized = true;
+        }
+        history.replaceState(null, "", targetHash);
+        if (shouldScrollToAnchor) {
+          window.setTimeout(() => scrollToDetailHash(targetHash), 60);
+        }
+      }
+
+      function initDetailPage() {
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            entry.target.querySelectorAll(".bar").forEach((bar) => bar.classList.add("is-animated"));
+            if (!prefersReducedMotion) {
+              entry.target.querySelectorAll("[data-count]").forEach(animateNumber);
+            }
+            revealObserver.unobserve(entry.target);
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+        document.querySelectorAll("#page-detail .reveal").forEach((el) => revealObserver.observe(el));
+
+        const sectionMap = [
+          { id: "teams-section", link: navLinks[0] },
+          { id: "probability", link: navLinks[1] },
+          { id: "goals-section", link: navLinks[2] },
+          { id: "scores-section", link: navLinks[3] },
+          { id: "analysis-section", link: navLinks[4] },
+          { id: "risk", link: navLinks[5] }
+        ];
+
+        const navObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const active = sectionMap.find((item) => item.id === entry.target.id);
+            if (!active) return;
+            navLinks.forEach((link) => link.classList.toggle("is-active", link === active.link));
+          });
+        }, { rootMargin: "-40% 0px -50% 0px", threshold: 0 });
+
+        sectionMap.forEach(({ id }) => {
+          const section = document.getElementById(id);
+          if (section) navObserver.observe(section);
+        });
+      }
+
+      function animateNumber(el) {
+        if (el.dataset.animated === "true") return;
+        el.dataset.animated = "true";
+        const target = parseFloat(el.dataset.count);
+        const suffix = el.dataset.suffix || "";
+        const decimals = String(target).includes(".") ? 1 : 0;
+        const duration = 900;
+        const start = performance.now();
+        function frame(now) {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = `${(target * eased).toFixed(decimals)}${suffix}`;
+          if (progress < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      }
+
+      async function writeClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+
+      function downloadPdf() {
+        showToast("正在打开 PDF 保存窗口");
+        window.setTimeout(() => window.print(), 120);
+      }
+
+      goDetail.addEventListener("click", () => showPage("detail", "#detail"));
+      goHome.addEventListener("click", () => showPage("home", "#home"));
+      downloadPdfButtons.forEach((button) => {
+        button.addEventListener("click", downloadPdf);
+      });
+
+      copyVerdict.addEventListener("click", async () => {
+        const original = "复制判断结论";
+        try {
+          await writeClipboard(VERDICT.summary);
+          copyVerdict.textContent = "已复制";
+          showToast("判断结论已复制");
+        } catch {
+          copyVerdict.textContent = "复制失败";
+          showToast("复制失败，请手动复制");
+        }
+        window.setTimeout(() => { copyVerdict.textContent = original; }, 1500);
+      });
+
+      if (isDetailHash(location.hash)) {
+        showPage("detail", location.hash);
+      }
+
+      window.addEventListener("hashchange", () => {
+        showPage(isDetailHash(location.hash) ? "detail" : "home", location.hash);
+      });
+    })();
+  </script>
+</body>
+</html>

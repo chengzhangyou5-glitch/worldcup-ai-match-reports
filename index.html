@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="2026 世界杯单场 AI 赛前分析报告入口。">
+  <meta name="theme-color" content="#06100b">
+  <title>绿茵情报站｜2026 世界杯赛前分析报告</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06100b;
+      --panel: rgba(10, 34, 20, 0.78);
+      --line: rgba(122, 255, 172, 0.18);
+      --text: #eef8ef;
+      --muted: #9dbca5;
+      --green: #4dff88;
+      --gold: #ffc940;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(77, 255, 136, 0.14), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(255, 201, 64, 0.08), transparent 28%),
+        var(--bg);
+    }
+
+    main {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    header {
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 12px 0 10px;
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .teams {
+      font-size: 26px;
+      font-weight: 950;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+    }
+
+    .meta {
+      margin-top: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .pick {
+      margin-top: auto;
+      padding-top: 22px;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .card:hover {
+      border-color: rgba(77, 255, 136, 0.48);
+      transform: translateY(-2px);
+      transition: 180ms ease;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      main { padding: 34px 0; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: 170px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="kicker">WORLD CUP 26 · AI MATCH VERDICT</div>
+      <h1>绿茵情报站</h1>
+      <p>2026 世界杯单场赛前分析报告入口。点击下方卡片可打开对应 HTML 报告，手机和电脑都能直接浏览。</p>
+    </header>
+
+    <section class="grid" aria-label="比赛报告列表">
+      <a class="card" href="./germany-curacao.html">
+        <div class="teams">德国 vs 库拉索</div>
+        <div class="meta">E 组 · 北京时间 6月15日 01:00</div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card" href="./netherlands-japan.html">
+        <div class="teams">荷兰 vs 日本</div>
+        <div class="meta">F 组 · 北京时间 6月15日 04:00</div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card" href="./ivory-coast-ecuador.html">
+        <div class="teams">科特迪瓦 vs 厄瓜多尔</div>
+        <div class="meta">E 组 · 北京时间 6月15日 07:00</div>
+        <div class="pick">查看完整报告</div>
+      </a>
+    </section>
+
+    <footer>
+      本页面和单场报告仅作为足球赛前数据分析与娱乐参考，不保证赛果命中，赛果存在不确定性。
+    </footer>
+  </main>
+</body>
+</html>
