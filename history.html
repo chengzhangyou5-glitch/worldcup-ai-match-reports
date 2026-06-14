@@ -242,6 +242,11 @@
       display: none;
     }
 
+    .upcoming-results {
+      display: grid;
+      gap: 12px;
+    }
+
     .result-card {
       display: grid;
       gap: 12px;
@@ -309,6 +314,7 @@
 
     .result-check.is-hit strong { color: var(--green); }
     .result-check.is-miss strong { color: #ff9a9a; }
+    .result-check.is-pending strong { color: var(--accent-gold); }
 
     .notes {
       display: grid;
@@ -408,7 +414,7 @@
       <div>
         <div class="kicker">WORLD CUP 26 · PERFORMANCE TRACKER</div>
         <h1>历史预测情况汇总</h1>
-        <p>更新时间：北京时间 2026年6月15日 00:15。只统计已经结束的 8 场，德国 vs 库拉索及之后未开赛场次暂不计入。</p>
+        <p>更新时间：北京时间 2026年6月15日 00:15。只统计已经结束的 8 场，瑞典 vs 突尼斯等未开赛场次仅列为赛前记录，暂不计入命中统计。</p>
       </div>
       <a class="back" href="./index.html">← 返回首页</a>
     </div>
@@ -635,6 +641,28 @@
             <div class="result-check is-hit"><span>胜平负方向</span><strong>澳大利亚胜 · 中</strong></div>
             <div class="result-check is-hit"><span>前二比分</span><strong>2:0 / 1:0 · 中</strong></div>
             <div class="result-check is-hit"><span>总进球区间</span><strong>0-2 球 · 中</strong></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="upcoming-title">
+      <div class="section-title">
+        <h2 id="upcoming-title">未赛场次</h2>
+      </div>
+      <div class="upcoming-results" aria-label="未赛赛前记录">
+        <article class="result-card">
+          <div class="result-card-head">
+            <div>
+              <div class="result-title">瑞典 vs 突尼斯</div>
+              <div class="sub">北京时间 6月15日 10:00 · F 组 · 不计入当前 8 场统计</div>
+            </div>
+            <div class="result-score">赛前</div>
+          </div>
+          <div class="result-checks">
+            <div class="result-check is-pending"><span>结算方向</span><strong>瑞典胜</strong></div>
+            <div class="result-check is-pending"><span>参考比分</span><strong>1:0 / 1:1 / 2:0 / 0:0</strong></div>
+            <div class="result-check is-pending"><span>总进球区间</span><strong>0-2 球</strong></div>
           </div>
         </article>
       </div>
