@@ -18,7 +18,8 @@
       --gold: #F5D36B;
       --accent-gold: #F5D36B;
       --accent-gold-light: #FFF0A6;
-      --accent-gold-dark: #B8892E;
+      --accent-gold-dark: #D4A947;
+      --accent-gold-gradient: linear-gradient(180deg, #FFF4BD 0%, #F5D36B 58%, #D4A947 100%);
       --red: #ff6b6b;
       --blue: #6cb6ff;
     }
@@ -32,7 +33,7 @@
       font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 16% 8%, rgba(255, 201, 64, 0.13), transparent 28%),
+        radial-gradient(circle at 16% 8%, rgba(245, 211, 107, 0.12), transparent 28%),
         radial-gradient(circle at 86% 18%, rgba(77, 255, 136, 0.17), transparent 30%),
         linear-gradient(90deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 118px),
         linear-gradient(180deg, rgba(122,255,172,0.035) 0 1px, transparent 1px 96px),
@@ -126,7 +127,7 @@
     }
 
     .match-card.is-played {
-      border-color: rgba(255, 201, 64, 0.32);
+      border-color: rgba(245, 211, 107, 0.28);
       background:
         linear-gradient(180deg, rgba(28, 58, 24, 0.92), rgba(7, 31, 18, 0.80));
     }
@@ -417,7 +418,7 @@
     .history-stat strong {
       display: block;
       color: var(--accent-gold);
-      background: linear-gradient(180deg, #FFF0A6 0%, #F5D36B 45%, #B8892E 100%);
+      background: var(--accent-gold-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
