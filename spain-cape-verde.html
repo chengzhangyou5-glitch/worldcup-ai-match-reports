@@ -510,6 +510,11 @@
       line-height: 1.35;
     }
 
+    .meta-chip.score-chip strong {
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
     .landing-actions {
       display: flex;
       flex-wrap: wrap;
@@ -1158,7 +1163,7 @@
             <strong>本场结算方向：西班牙胜</strong>
             <span>比分概率与总进球倾向仅作为附加分析参考，不参与结算判断。</span>
           </div>
-          <p class="verdict-sub">西班牙整体实力、控球质量、前场创造力和大赛经验明显占优，本场赛前判断以<strong>西班牙胜</strong>为最清晰方向。佛得角首次进入世界杯正赛，身体对抗、纪律性和反击速度不能低估，但面对西班牙长时间控球、边路冲击和前场压迫，防线承压会比较明显。比分关注 3:0、4:0、3:1、2:0，整体总进球倾向 4球以上权重略高。</p>
+          <p class="verdict-sub">西班牙整体实力、控球质量、前场创造力和大赛经验明显占优，本场赛前判断以<strong>西班牙胜</strong>为最清晰方向。佛得角首次进入世界杯正赛，身体对抗、纪律性和反击速度不能低估，但面对西班牙长时间控球、边路冲击和前场压迫，防线承压会比较明显。比分排序 3:0、4:0、3:1、2:0、4:1、5:0，整体总进球倾向 4球以上权重略高。</p>
 
           <div class="outcome-row" role="group" aria-label="胜平负判断">
             <div class="outcome-card is-pick" data-outcome="win-home"><div class="outcome-icon">胜</div><div class="outcome-text">西班牙胜</div><div class="outcome-hint">AI 最终判断</div></div>
@@ -1167,8 +1172,8 @@
           </div></section>
 
         <div class="landing-meta">
-          <div class="meta-chip">
-            <span class="label">参考比分</span><strong>3:0 / 4:0 / 3:1 / 2:0</strong>
+          <div class="meta-chip score-chip">
+            <span class="label">比分排序</span><strong>3:0 / 4:0 / 3:1 / 2:0 / 4:1 / 5:0</strong>
           </div>
           <div class="meta-chip">
             <span class="label">总进球</span><strong>4球以上</strong>
@@ -1252,7 +1257,7 @@
 </div></div></section><section class="section-block reveal" id="scores-section" aria-labelledby="scores">
         <div class="section-title">
           <span class="num">04</span>
-          <h2 id="scores">比分概率参考</h2>
+          <h2 id="scores">比分排序参考</h2>
           <div class="line" aria-hidden="true"></div>
         </div>
         <div class="grid score-grid">
@@ -1283,7 +1288,7 @@
       </section><section class="section-block reveal service-card glass">
         <span class="label">Report Note</span>
         <h2>服务说明</h2>
-        <p class="muted">本页面为 AI 辅助生成的赛前数据分析报告，结合球队状态、比赛风格、概率倾向与风险因素进行整理。赛前判断为西班牙胜，比分关注 3:0 / 4:0 / 3:1 / 2:0，总进球倾向 4球以上；报告内容用于球迷观赛前参考，不保证赛果命中。</p></section><footer class="disclaimer">
+        <p class="muted">本页面为 AI 辅助生成的赛前数据分析报告，结合球队状态、比赛风格、概率倾向与风险因素进行整理。赛前判断为西班牙胜，比分排序 3:0 / 4:0 / 3:1 / 2:0 / 4:1 / 5:0，总进球倾向 4球以上；报告内容用于球迷观赛前参考，不保证赛果命中。</p></section><footer class="disclaimer">
         本报告仅作为足球数据分析与娱乐参考，不构成任何决策建议或结果承诺，不保证赛果命中，赛果存在不确定性。
       </footer>
     </main>
@@ -1296,7 +1301,7 @@
       const VERDICT = {
         outcome: "win-home",
         label: "西班牙胜",
-        summary: "西班牙 vs 佛得角赛前判断：西班牙胜。参考比分 3:0 / 4:0 / 3:1 / 2:0，总进球倾向 4球以上，风险等级中低。"
+        summary: "西班牙 vs 佛得角赛前判断：西班牙胜。比分排序 3:0 / 4:0 / 3:1 / 2:0 / 4:1 / 5:0，总进球倾向 4球以上，风险等级中低。"
       };
 
       const pageHome = document.getElementById("page-home");
@@ -1403,19 +1408,33 @@
           { id: "risk", link: navLinks[5] }
         ];
 
-        const navObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            const active = sectionMap.find((item) => item.id === entry.target.id);
-            if (!active) return;
-            navLinks.forEach((link) => link.classList.toggle("is-active", link === active.link));
+        let navTicking = false;
+        const setActiveNav = () => {
+          const stickyNav = document.querySelector(".sticky-nav");
+          const activationLine = (stickyNav ? stickyNav.getBoundingClientRect().height : 0) + 64;
+          let active = sectionMap[0];
+          sectionMap.forEach((item) => {
+            const section = document.getElementById(item.id);
+            if (!section) return;
+            if (section.getBoundingClientRect().top <= activationLine) {
+              active = item;
+            }
           });
-        }, { rootMargin: "-40% 0px -50% 0px", threshold: 0 });
+          navLinks.forEach((link) => link.classList.toggle("is-active", link === active.link));
+        };
 
-        sectionMap.forEach(({ id }) => {
-          const section = document.getElementById(id);
-          if (section) navObserver.observe(section);
-        });
+        const requestNavSync = () => {
+          if (navTicking) return;
+          navTicking = true;
+          window.requestAnimationFrame(() => {
+            setActiveNav();
+            navTicking = false;
+          });
+        };
+
+        window.addEventListener("scroll", requestNavSync, { passive: true });
+        window.addEventListener("resize", requestNavSync);
+        window.setTimeout(setActiveNav, 0);
       }
 
       function animateNumber(el) {

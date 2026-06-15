@@ -254,6 +254,10 @@
       line-height: 1.35;
     }
 
+    .check-row.score-row {
+      align-items: flex-start;
+    }
+
     .check-pill {
       flex: 0 0 auto;
       min-width: 44px;
@@ -262,6 +266,14 @@
       text-align: center;
       font-size: 12px;
       font-weight: 950;
+    }
+
+    .check-pill.score-list {
+      flex: 1 1 auto;
+      max-width: 220px;
+      white-space: normal;
+      line-height: 1.35;
+      border-radius: 12px;
     }
 
     .check-pill.hit {
@@ -880,7 +892,7 @@
         <div class="card-hover-panel" aria-hidden="true">
           <div class="hover-title">赛前看点</div>
           <div class="check-row"><span>结算方向</span><span class="check-pill info">西班牙胜</span></div>
-          <div class="check-row"><span>参考比分</span><span class="check-pill info">3:0 / 4:0 / 3:1 / 2:0</span></div>
+          <div class="check-row score-row"><span>比分排序</span><span class="check-pill info score-list">3:0 / 4:0 / 3:1 / 2:0 / 4:1 / 5:0</span></div>
           <div class="check-row"><span>总进球区间</span><span class="check-pill info">4球以上</span></div>
         </div>
         <div class="pick">查看完整报告</div>
