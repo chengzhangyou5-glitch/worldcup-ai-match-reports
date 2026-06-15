@@ -397,6 +397,8 @@
     }
 
     .history-stat {
+      min-width: 0;
+      overflow: hidden;
       min-height: 132px;
       padding: 18px;
       border: 1px solid rgba(245, 211, 107, 0.28);
@@ -417,13 +419,15 @@
 
     .history-stat strong {
       display: block;
+      max-width: 100%;
       color: var(--accent-gold);
       background: var(--accent-gold-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      font-size: clamp(28px, 3.25vw, 40px);
+      font-size: clamp(26px, 2.85vw, 36px);
       line-height: 1;
+      letter-spacing: -0.035em;
       white-space: nowrap;
       filter: drop-shadow(0 0 16px rgba(245, 211, 107, 0.24));
     }
@@ -555,11 +559,12 @@
       }
       .history-stat {
         min-height: 94px;
-        padding: 12px 10px;
+        padding: 12px 8px;
         border-radius: 14px;
       }
       .history-stat strong {
-        font-size: clamp(25px, 8.5vw, 34px);
+        font-size: clamp(22px, 7.2vw, 30px);
+        letter-spacing: -0.045em;
       }
       .history-stat span {
         margin-top: 8px;
@@ -571,6 +576,18 @@
         font-size: 11px;
       }
       .flag-pair img { width: 48px; height: 34px; }
+    }
+
+    @media (max-width: 380px) {
+      .history-stats {
+        gap: 6px;
+      }
+      .history-stat {
+        padding: 10px 6px;
+      }
+      .history-stat strong {
+        font-size: 22px;
+      }
     }
   </style>
 </head>
