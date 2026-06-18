@@ -931,6 +931,35 @@
       border-color: transparent;
     }
 
+    .score-card.score-card--featured {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      border-color: rgba(245, 211, 107, 0.58);
+      background:
+        linear-gradient(145deg, rgba(245, 211, 107, 0.15), rgba(18, 62, 35, 0.90) 44%, rgba(8, 24, 15, 0.82));
+      box-shadow:
+        0 18px 48px rgba(245, 211, 107, 0.11),
+        inset 0 0 0 1px rgba(255, 240, 166, 0.10);
+    }
+    .score-card.score-card--featured::before {
+      content: "";
+      position: absolute;
+      inset: 0 18px auto;
+      z-index: -1;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--green), transparent);
+      box-shadow: 0 0 18px rgba(245, 211, 107, 0.55);
+    }
+    .score-card.score-card--featured .score-line {
+      color: #fff0a6;
+      text-shadow: 0 0 24px rgba(245, 211, 107, 0.18);
+    }
+    .score-card.score-card--featured .muted {
+      color: #c9decf;
+    }
+
     .note-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .note-card { min-height: 190px; }
     .note-index {
@@ -1243,8 +1272,8 @@
           <h2 id="scores">比分概率参考</h2>
           <div class="line" aria-hidden="true"></div>
         </div>
-                                                <div class="grid score-grid"><article class="score-card glass card"><div class="score-line">2:1</div><p class="muted">概率 16%</p><span class="tag primary">首选小胜</span></article>
-<article class="score-card glass card"><div class="score-line">1:1</div><p class="muted">概率 15%</p><span class="tag">重点防平</span></article>
+                                                <div class="grid score-grid"><article class="score-card score-card--featured glass card"><div class="score-line">2:1</div><p class="muted">概率 16%</p><span class="tag primary">首选小胜</span></article>
+<article class="score-card score-card--featured glass card"><div class="score-line">1:1</div><p class="muted">概率 15%</p><span class="tag">重点防平</span></article>
 <article class="score-card glass card"><div class="score-line">1:0</div><p class="muted">概率 13%</p><span class="tag">保守路径</span></article>
 <article class="score-card glass card"><div class="score-line">2:2</div><p class="muted">概率 10%</p><span class="tag">开放平局</span></article>
 <article class="score-card glass card"><div class="score-line">0:1</div><p class="muted">概率 8%</p><span class="tag">防冷路径</span></article></div></section><section class="section-block reveal" id="analysis-section" aria-labelledby="analysis">
