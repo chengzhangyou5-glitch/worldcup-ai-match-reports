@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="2026 世界杯单场 AI 赛前分析报告入口。">
+  <meta name="theme-color" content="#06100b">
+  <title>绿茵情报站｜2026 世界杯赛前分析报告</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #06100b;
+      --panel: rgba(10, 34, 20, 0.78);
+      --line: rgba(122, 255, 172, 0.18);
+      --text: #eef8ef;
+      --muted: #9dbca5;
+      --green: #4dff88;
+      --gold: #F5D36B;
+      --accent-gold: #F5D36B;
+      --accent-gold-light: #FFF0A6;
+      --accent-gold-dark: #D4A947;
+      --accent-gold-gradient: linear-gradient(180deg, #FFF4BD 0%, #F5D36B 58%, #D4A947 100%);
+      --red: #ff6b6b;
+      --blue: #6cb6ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      position: relative;
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(245, 211, 107, 0.12), transparent 28%),
+        radial-gradient(circle at 86% 18%, rgba(77, 255, 136, 0.17), transparent 30%),
+        linear-gradient(90deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 118px),
+        linear-gradient(180deg, rgba(122,255,172,0.035) 0 1px, transparent 1px 96px),
+        repeating-linear-gradient(90deg, rgba(22, 74, 38, 0.24) 0 70px, rgba(7, 30, 18, 0.20) 70px 140px),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 50% 8%, transparent 0 16%, rgba(122,255,172,0.10) 16.1% 16.35%, transparent 16.5%),
+        linear-gradient(90deg, transparent 49.9%, rgba(122,255,172,0.08) 50%, transparent 50.1%),
+        radial-gradient(circle at 50% 52%, transparent 0 13%, rgba(255,255,255,0.035) 13.1% 13.35%, transparent 13.5%);
+      opacity: 0.76;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.72) 58%, transparent);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 56px 0;
+    }
+
+    header {
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      margin: 12px 0 10px;
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 30px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .match-card {
+      position: relative;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .match-card::after {
+      content: "";
+      position: absolute;
+      right: -72px;
+      bottom: -86px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(77,255,136,0.16), transparent 64%);
+      pointer-events: none;
+    }
+
+    .match-card.is-played {
+      border-color: rgba(245, 211, 107, 0.28);
+      background:
+        linear-gradient(180deg, rgba(28, 58, 24, 0.92), rgba(7, 31, 18, 0.80));
+    }
+
+    .match-card.is-upcoming {
+      border-color: rgba(108, 182, 255, 0.30);
+      background:
+        linear-gradient(180deg, rgba(9, 42, 36, 0.84), rgba(5, 25, 18, 0.76));
+    }
+
+    .card-head {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .flag-pair {
+      display: flex;
+      align-items: center;
+      min-height: 40px;
+    }
+
+    .flag-pair img {
+      width: 54px;
+      height: 38px;
+      object-fit: cover;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .flag-pair img + img {
+      margin-left: -12px;
+    }
+
+    .status-pill {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .status-pill.played {
+      color: #10200f;
+      background: var(--gold);
+    }
+
+    .status-pill.upcoming {
+      color: #e6f5ff;
+      background: rgba(108, 182, 255, 0.18);
+      border-color: rgba(108, 182, 255, 0.38);
+    }
+
+    .result-line {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 2px;
+      padding: 12px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.18);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-line strong {
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .is-upcoming .result-line strong {
+      color: var(--blue);
+      font-size: 16px;
+    }
+
+    .card-hover-panel {
+      position: absolute;
+      inset: auto 14px 14px 14px;
+      z-index: 4;
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid rgba(245, 211, 107, 0.28);
+      border-radius: 14px;
+      background: rgba(4, 15, 9, 0.94);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.36), 0 0 24px rgba(245, 211, 107, 0.10);
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 180ms ease, transform 180ms ease;
+      pointer-events: none;
+    }
+
+    .match-card:hover .card-hover-panel,
+    .match-card:focus-visible .card-hover-panel {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .hover-title {
+      color: var(--accent-gold);
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--soft, #cfe8d5);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .check-row.score-row {
+      align-items: flex-start;
+    }
+
+    .check-pill {
+      flex: 0 0 auto;
+      min-width: 44px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .check-pill.score-list {
+      flex: 1 1 auto;
+      max-width: 220px;
+      white-space: normal;
+      line-height: 1.35;
+      border-radius: 12px;
+    }
+
+    .check-pill.hit {
+      color: #041009;
+      background: var(--green);
+    }
+
+    .check-pill.miss {
+      color: #fff5f5;
+      background: rgba(255, 107, 107, 0.18);
+      border: 1px solid rgba(255, 107, 107, 0.42);
+    }
+
+    .check-pill.info {
+      color: #eaf6ff;
+      background: rgba(108, 182, 255, 0.18);
+      border: 1px solid rgba(108, 182, 255, 0.38);
+    }
+
+    .is-upcoming .card-hover-panel {
+      border-color: rgba(108, 182, 255, 0.34);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.36), 0 0 24px rgba(108, 182, 255, 0.10);
+    }
+
+    .history-card {
+      position: relative;
+      isolation: isolate;
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 26px;
+      min-height: 296px;
+      overflow: hidden;
+      padding: 30px;
+      border: 1px solid rgba(245, 211, 107, 0.54);
+      border-radius: 22px;
+      background:
+        linear-gradient(120deg, rgba(245, 211, 107, 0.13), transparent 34%),
+        linear-gradient(180deg, rgba(24, 91, 49, 0.98), rgba(5, 24, 15, 0.92));
+      box-shadow:
+        0 34px 110px rgba(245, 211, 107, 0.13),
+        0 0 0 1px rgba(245, 211, 107, 0.24) inset,
+        0 0 42px rgba(184, 137, 46, 0.12) inset;
+      transform: translateZ(0);
+      animation: historyCardPulse 5.6s ease-in-out infinite;
+    }
+
+    .history-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, transparent, rgba(255, 240, 166, 0.82), rgba(245, 211, 107, 0.64), transparent) left top / 46% 2px no-repeat,
+        linear-gradient(90deg, transparent, rgba(184, 137, 46, 0.54), rgba(245, 211, 107, 0.72), transparent) right bottom / 46% 2px no-repeat,
+        linear-gradient(180deg, transparent, rgba(245, 211, 107, 0.34), transparent) left top / 2px 52% no-repeat,
+        linear-gradient(180deg, transparent, rgba(184, 137, 46, 0.30), transparent) right bottom / 2px 52% no-repeat;
+      animation: historyEdgeRun 4.8s ease-in-out infinite alternate;
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .history-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(110deg, transparent 0 36%, rgba(255,255,255,0.18) 44%, transparent 52% 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 82px);
+      mix-blend-mode: screen;
+      translate: -110% 0;
+      animation: historySweep 4.8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .history-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .history-kicker {
+      position: relative;
+      width: fit-content;
+      padding: 9px 12px 9px 28px;
+      border: 1px solid rgba(245, 211, 107, 0.58);
+      border-radius: 999px;
+      color: var(--accent-gold);
+      background: rgba(0, 0, 0, 0.25);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      box-shadow: 0 0 26px rgba(245, 211, 107, 0.14);
+    }
+
+    .history-kicker::before {
+      content: "";
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      box-shadow: 0 0 0 0 rgba(245, 211, 107, 0.48);
+      translate: 0 -50%;
+      animation: historyDot 1.8s ease-out infinite;
+    }
+
+    .history-title {
+      margin-top: 18px;
+      font-size: clamp(36px, 5.3vw, 64px);
+      font-weight: 950;
+      line-height: 0.96;
+      letter-spacing: -0.065em;
+      text-shadow: 0 0 30px rgba(245, 211, 107, 0.16);
+    }
+
+    .history-copy {
+      margin-top: 14px;
+      max-width: 620px;
+      color: #c7ead0;
+    }
+
+    .history-stats {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-content: center;
+    }
+
+    .history-stat {
+      min-width: 0;
+      overflow: hidden;
+      min-height: 132px;
+      padding: 18px;
+      border: 1px solid rgba(245, 211, 107, 0.28);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.36), rgba(0, 0, 0, 0.18));
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(245, 211, 107, 0.08) inset;
+      animation: historyStatFloat 4.6s ease-in-out infinite;
+    }
+
+    .history-stat:nth-child(2) {
+      animation-delay: 0.28s;
+    }
+
+    .history-stat:nth-child(3) {
+      animation-delay: 0.56s;
+    }
+
+    .history-stat strong {
+      display: block;
+      max-width: 100%;
+      color: var(--accent-gold);
+      background: var(--accent-gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: clamp(26px, 2.85vw, 36px);
+      line-height: 1;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+      filter: drop-shadow(0 0 16px rgba(245, 211, 107, 0.24));
+    }
+
+    .history-stat span {
+      display: block;
+      margin-top: 10px;
+      color: #d6eede;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .history-stat small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    @keyframes historyCardPulse {
+      0%, 100% {
+        box-shadow:
+          0 34px 110px rgba(245, 211, 107, 0.12),
+          0 0 0 1px rgba(245, 211, 107, 0.22) inset,
+          0 0 36px rgba(184, 137, 46, 0.10) inset;
+      }
+      50% {
+        box-shadow:
+          0 38px 128px rgba(245, 211, 107, 0.18),
+          0 0 0 1px rgba(245, 211, 107, 0.34) inset,
+          0 0 54px rgba(184, 137, 46, 0.14) inset;
+      }
+    }
+
+    @keyframes historyEdgeRun {
+      0% {
+        background-position: left top, right bottom, left top, right bottom;
+      }
+      100% {
+        background-position: right top, left bottom, left bottom, right top;
+      }
+    }
+
+    @keyframes historySweep {
+      0%, 42% { translate: -110% 0; }
+      70%, 100% { translate: 110% 0; }
+    }
+
+    @keyframes historyDot {
+      0% { box-shadow: 0 0 0 0 rgba(245, 211, 107, 0.52); }
+      70%, 100% { box-shadow: 0 0 0 9px rgba(245, 211, 107, 0); }
+    }
+
+    @keyframes historyStatFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .history-card,
+      .history-card::before,
+      .history-card::after,
+      .history-kicker::before,
+      .history-stat {
+        animation: none !important;
+      }
+    }
+
+    .teams {
+      position: relative;
+      z-index: 1;
+      font-size: 26px;
+      font-weight: 950;
+      line-height: 1.22;
+      letter-spacing: -0.03em;
+    }
+
+    .meta {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .pick {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      padding-top: 22px;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .card:hover {
+      border-color: rgba(77, 255, 136, 0.48);
+      transform: translateY(-2px);
+      transition: 180ms ease;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 820px) {
+      main { padding: 34px 0; }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: 170px; }
+      .history-card {
+        grid-template-columns: 1fr;
+        padding: 24px 20px;
+        gap: 18px;
+      }
+      .history-title {
+        margin-top: 14px;
+        font-size: clamp(36px, 11vw, 48px);
+        line-height: 1.02;
+      }
+      .history-copy {
+        margin-top: 12px;
+        font-size: 14px;
+        line-height: 1.65;
+      }
+      .history-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .history-stat {
+        min-height: 94px;
+        padding: 12px 8px;
+        border-radius: 14px;
+      }
+      .history-stat strong {
+        font-size: clamp(22px, 7.2vw, 30px);
+        letter-spacing: -0.045em;
+      }
+      .history-stat span {
+        margin-top: 8px;
+        font-size: 12px;
+        line-height: 1.25;
+      }
+      .history-stat small {
+        margin-top: 5px;
+        font-size: 11px;
+      }
+      .flag-pair img { width: 48px; height: 34px; }
+    }
+
+    @media (max-width: 380px) {
+      .history-stats {
+        gap: 6px;
+      }
+      .history-stat {
+        padding: 10px 6px;
+      }
+      .history-stat strong {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="kicker">WORLD CUP 26 · AI MATCH VERDICT</div>
+      <h1>绿茵情报站</h1>
+      <p>2026 世界杯单场赛前分析报告入口。比赛按北京时间先后顺序排列，点击下方卡片可打开对应 HTML 报告，手机和电脑都能直接浏览。</p>
+    </header>
+
+    <section class="grid" aria-label="比赛报告列表">
+      <a class="card history-card" href="./history.html">
+        <div>
+          <div class="history-kicker">PINNED · 历史预测情况汇总</div>
+          <div class="history-title">20 场已赛样本复盘</div>
+          <p class="history-copy">只统计已经结束的比赛，未开赛场次暂不计入。点击查看逐场赛果、胜平负判断、前二比分覆盖和总进球区间表现。</p>
+          <div class="pick">查看历史明细 →</div>
+        </div>
+        <div class="history-stats" aria-label="历史预测数据预览">
+          <div class="history-stat">
+            <strong>13/20</strong>
+            <span>胜平负猜中</span>
+            <small>命中率 65%</small>
+          </div>
+          <div class="history-stat">
+            <strong>8/20</strong>
+            <span>前二比分至少一个中</span>
+            <small>覆盖率 40%</small>
+          </div>
+          <div class="history-stat">
+            <strong>12/20</strong>
+            <span>总球数区间</span>
+            <small>命中率 60%</small>
+          </div>
+        </div>
+      </a>
+
+      <a class="card match-card is-played" href="./mexico-south-africa.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/mx.png" alt="">
+            <img src="https://flagcdn.com/w80/za.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">墨西哥 vs 南非</div>
+        <div class="meta">小组赛 · 北京时间 6月12日 03:00</div>
+        <div class="result-line"><span>赛果</span><strong>2:0</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./korea-czech.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/kr.png" alt="">
+            <img src="https://flagcdn.com/w80/cz.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">韩国 vs 捷克</div>
+        <div class="meta">A 组 · 北京时间 6月12日 10:00</div>
+        <div class="result-line"><span>赛果</span><strong>2:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./canada-bosnia.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/ca.png" alt="">
+            <img src="https://flagcdn.com/w80/ba.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">加拿大 vs 波黑</div>
+        <div class="meta">B 组 · 北京时间 6月13日 03:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./qatar-switzerland.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/qa.png" alt="">
+            <img src="https://flagcdn.com/w80/ch.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">卡塔尔 vs 瑞士</div>
+        <div class="meta">小组赛 · 北京时间 6月13日 06:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./usa-paraguay.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/us.png" alt="">
+            <img src="https://flagcdn.com/w80/py.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">美国 vs 巴拉圭</div>
+        <div class="meta">D 组 · 北京时间 6月13日 09:00</div>
+        <div class="result-line"><span>赛果</span><strong>4:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./brazil-morocco.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/br.png" alt="">
+            <img src="https://flagcdn.com/w80/ma.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">巴西 vs 摩洛哥</div>
+        <div class="meta">C 组 · 北京时间 6月14日 06:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./haiti-scotland.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/ht.png" alt="">
+            <img src="https://flagcdn.com/w80/gb-sct.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">海地 vs 苏格兰</div>
+        <div class="meta">C 组 · 北京时间 6月14日 09:00</div>
+        <div class="result-line"><span>赛果</span><strong>0:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./australia-turkey.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/au.png" alt="">
+            <img src="https://flagcdn.com/w80/tr.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">澳大利亚 vs 土耳其</div>
+        <div class="meta">D 组 · 北京时间 6月14日 12:00</div>
+        <div class="result-line"><span>赛果</span><strong>2:0</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./germany-curacao.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/de.png" alt="">
+            <img src="https://flagcdn.com/w80/cw.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">德国 vs 库拉索</div>
+        <div class="meta">E 组 · 北京时间 6月15日 01:00</div>
+        <div class="result-line"><span>赛果</span><strong>7:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./netherlands-japan.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/nl.png" alt="">
+            <img src="https://flagcdn.com/w80/jp.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">荷兰 vs 日本</div>
+        <div class="meta">F 组 · 北京时间 6月15日 04:00</div>
+        <div class="result-line"><span>赛果</span><strong>2:2</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./ivory-coast-ecuador.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/ci.png" alt="">
+            <img src="https://flagcdn.com/w80/ec.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">科特迪瓦 vs 厄瓜多尔</div>
+        <div class="meta">E 组 · 北京时间 6月15日 07:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:0</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./sweden-tunisia.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/se.png" alt="">
+            <img src="https://flagcdn.com/w80/tn.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">瑞典 vs 突尼斯</div>
+        <div class="meta">F 组 · 北京时间 6月15日 10:00</div>
+        <div class="result-line"><span>赛果</span><strong>5:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./spain-cape-verde.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/es.png" alt="">
+            <img src="https://flagcdn.com/w80/cv.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">西班牙 vs 佛得角</div>
+        <div class="meta">H 组 · 北京时间 6月16日 00:00</div>
+        <div class="result-line"><span>赛果</span><strong>0:0</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./belgium-egypt.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/be.png" alt="">
+            <img src="https://flagcdn.com/w80/eg.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">比利时 vs 埃及</div>
+        <div class="meta">G 组 · 北京时间 6月16日 03:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./saudi-arabia-uruguay.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/sa.png" alt="">
+            <img src="https://flagcdn.com/w80/uy.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">沙特阿拉伯 vs 乌拉圭</div>
+        <div class="meta">H 组 · 北京时间 6月16日 06:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./iran-new-zealand.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/ir.png" alt="">
+            <img src="https://flagcdn.com/w80/nz.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">伊朗 vs 新西兰</div>
+        <div class="meta">G 组 · 北京时间 6月16日 09:00</div>
+        <div class="result-line"><span>赛果</span><strong>2:2</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+            <a class="card match-card is-played" href="./france-senegal.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/fr.png" alt="">
+            <img src="https://flagcdn.com/w80/sn.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">法国 vs 塞内加尔</div>
+        <div class="meta">I 组 · 北京时间 6月17日 00:00</div>
+        <div class="result-line"><span>赛果</span><strong>3:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+            <a class="card match-card is-played" href="./iraq-norway.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/iq.png" alt="">
+            <img src="https://flagcdn.com/w80/no.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">伊拉克 vs 挪威</div>
+        <div class="meta">I 组 · 北京时间 6月17日 03:00</div>
+        <div class="result-line"><span>赛果</span><strong>1:4</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+            <a class="card match-card is-played" href="./argentina-algeria.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/ar.png" alt="">
+            <img src="https://flagcdn.com/w80/dz.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">阿根廷 vs 阿尔及利亚</div>
+        <div class="meta">J 组 · 北京时间 6月17日 06:00</div>
+        <div class="result-line"><span>赛果</span><strong>3:0</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-played" href="./austria-jordan.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/at.png" alt="">
+            <img src="https://flagcdn.com/w80/jo.png" alt="">
+          </div>
+          <span class="status-pill played">已赛</span>
+        </div>
+        <div class="teams">奥地利 vs 约旦</div>
+        <div class="meta">J 组 · 北京时间 6月17日 09:00</div>
+        <div class="result-line"><span>赛果</span><strong>3:1</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">预测校验</div>
+          <div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div>
+          <div class="check-row"><span>前二比分覆盖</span><span class="check-pill miss">未中</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-upcoming" href="./ghana-panama.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/gh.png" alt="">
+            <img src="https://flagcdn.com/w80/pa.png" alt="">
+          </div>
+          <span class="status-pill upcoming">未赛</span>
+        </div>
+        <div class="teams">加纳 vs 巴拿马</div>
+        <div class="meta">L 组 · 北京时间 6月18日 00:00</div>
+        <div class="result-line"><span>开赛</span><strong>6月18日 00:00</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">赛前看点</div>
+          <div class="check-row"><span>结算方向</span><span class="check-pill info">加纳胜</span></div>
+          <div class="check-row"><span>参考比分</span><span class="check-pill info">1:1 / 1:0 / 0:1 / 0:0</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill info">2-3球</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-upcoming" href="./england-croatia.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/gb-eng.png" alt="">
+            <img src="https://flagcdn.com/w80/hr.png" alt="">
+          </div>
+          <span class="status-pill upcoming">未赛</span>
+        </div>
+        <div class="teams">英格兰 vs 克罗地亚</div>
+        <div class="meta">L 组 · 北京时间 6月18日 03:00</div>
+        <div class="result-line"><span>开赛</span><strong>6月18日 03:00</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">赛前看点</div>
+          <div class="check-row"><span>结算方向</span><span class="check-pill info">英格兰胜</span></div>
+          <div class="check-row"><span>参考比分</span><span class="check-pill info">2:1 / 1:1 / 1:0 / 2:0</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill info">2-3球</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-upcoming" href="./portugal-dr-congo.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/pt.png" alt="">
+            <img src="https://flagcdn.com/w80/cd.png" alt="">
+          </div>
+          <span class="status-pill upcoming">未赛</span>
+        </div>
+        <div class="teams">葡萄牙 vs 刚果（金）</div>
+        <div class="meta">K 组 · 北京时间 6月18日 06:00</div>
+        <div class="result-line"><span>开赛</span><strong>6月18日 06:00</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">赛前看点</div>
+          <div class="check-row"><span>结算方向</span><span class="check-pill info">葡萄牙胜</span></div>
+          <div class="check-row"><span>参考比分</span><span class="check-pill info">2:0 / 1:0 / 2:1 / 3:0</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill info">2-3球</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+
+      <a class="card match-card is-upcoming" href="./uzbekistan-colombia.html">
+        <div class="card-head">
+          <div class="flag-pair" aria-hidden="true">
+            <img src="https://flagcdn.com/w80/uz.png" alt="">
+            <img src="https://flagcdn.com/w80/co.png" alt="">
+          </div>
+          <span class="status-pill upcoming">未赛</span>
+        </div>
+        <div class="teams">乌兹别克斯坦 vs 哥伦比亚</div>
+        <div class="meta">K 组 · 北京时间 6月18日 09:00</div>
+        <div class="result-line"><span>开赛</span><strong>6月18日 09:00</strong></div>
+        <div class="card-hover-panel" aria-hidden="true">
+          <div class="hover-title">赛前看点</div>
+          <div class="check-row"><span>结算方向</span><span class="check-pill info">哥伦比亚胜</span></div>
+          <div class="check-row"><span>参考比分</span><span class="check-pill info">0:2 / 0:1 / 1:2 / 1:1</span></div>
+          <div class="check-row"><span>总进球区间</span><span class="check-pill info">2-3球</span></div>
+        </div>
+        <div class="pick">查看完整报告</div>
+      </a>
+    </section>
+
+    <footer>
+      本页面和单场报告仅作为足球赛前数据分析与娱乐参考，不保证赛果命中，赛果存在不确定性。
+    </footer>
+  </main>
+</body>
+</html>
