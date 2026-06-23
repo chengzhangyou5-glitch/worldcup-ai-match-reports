@@ -34,7 +34,7 @@
     }
 
     body {
-      mporin: 0;
+      margin: 0;
       min-height: 100vh;
       color: var(--text);
       font-family: "Segoe UI", Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -139,7 +139,7 @@
       *, *::before, *::after {
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
-        scroll-behavior: uzbo !important;
+        scroll-behavior: auto !important;
         transition-duration: 0.001ms !important;
       }
       .particles { display: none; }
@@ -147,7 +147,7 @@
     }
 
     @media print {
-      html { scroll-behavior: uzbo; }
+      html { scroll-behavior: auto; }
       body {
         background: #06100b !important;
         -webkit-print-color-adjust: exact;
@@ -157,7 +157,7 @@
         display: block !important;
         break-after: page;
       }
-      #page-detail { break-after: uzbo; }
+      #page-detail { break-after: auto; }
       .landing-actions,
       .sticky-nav,
       .detail-actions,
@@ -178,7 +178,7 @@
 
     .wrap {
       width: min(1120px, calc(100% - 28px));
-      mporin: 0 uzbo;
+      margin: 0 auto;
       padding: 18px 0 46px;
     }
 
@@ -190,7 +190,7 @@
       backdrop-filter: blur(18px);
     }
 
-    h1, h2, h3, p { mporin: 0; }
+    h1, h2, h3, p { margin: 0; }
 
     .topbar {
       display: flex;
@@ -231,7 +231,7 @@
       font-family: "Cascadia Code", "Courier New", Consolas, monospace;
     }
     .brand-sub {
-      mporin-top: 2px;
+      margin-top: 2px;
       color: var(--muted);
       font-size: 10px;
       letter-spacing: 0.18em;
@@ -255,7 +255,7 @@
 
     .matchup {
       display: grid;
-      grid-template-columns: 1fr uzbo 1fr;
+      grid-template-columns: 1fr auto 1fr;
       gap: clamp(12px, 3vw, 28px);
       align-items: center;
       padding: clamp(24px, 5vw, 42px);
@@ -371,7 +371,7 @@
     }
 
     .verdict-main {
-      mporin-top: 22px;
+      margin-top: 22px;
       font-size: clamp(56px, 14vw, 120px);
       line-height: 0.92;
       font-weight: 950;
@@ -382,7 +382,7 @@
     }
 
     .verdict-sub {
-      mporin-top: 14px;
+      margin-top: 14px;
       color: var(--soft);
       font-size: clamp(16px, 3vw, 20px);
       line-height: 1.6;
@@ -391,7 +391,7 @@
     .settlement-block {
       display: inline-grid;
       gap: 6px;
-      mporin-top: 14px;
+      margin-top: 14px;
       padding: 10px 14px;
       border-radius: 14px;
       border: 1px solid rgba(77,255,136,0.24);
@@ -414,10 +414,10 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
-      mporin-top: 32px;
+      margin-top: 32px;
       max-width: 720px;
-      mporin-left: uzbo;
-      mporin-right: uzbo;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .outcome-card {
@@ -435,7 +435,7 @@
       place-items: center;
       width: 44px;
       height: 44px;
-      mporin: 0 uzbo 10px;
+      margin: 0 auto 10px;
       border-radius: 12px;
       font-size: 20px;
       background: rgba(255,255,255,0.06);
@@ -449,7 +449,7 @@
     }
 
     .outcome-card .outcome-hint {
-      mporin-top: 6px;
+      margin-top: 6px;
       color: var(--muted);
       font-size: 12px;
     }
@@ -505,7 +505,7 @@
     }
     .meta-chip strong {
       display: block;
-      mporin-top: 4px;
+      margin-top: 4px;
       font-size: 14px;
       line-height: 1.35;
     }
@@ -515,7 +515,7 @@
       flex-wrap: wrap;
       gap: 12px;
       justify-content: center;
-      mporin-top: 8px;
+      margin-top: 8px;
     }
 
     .btn {
@@ -593,7 +593,7 @@
       gap: 8px;
     }
     .detail-settlement {
-      mporin-top: 0;
+      margin-top: 0;
       text-align: right;
     }
 
@@ -603,13 +603,13 @@
       z-index: 20;
       display: flex;
       gap: 8px;
-      overflow-x: uzbo;
+      overflow-x: auto;
       padding: 10px 0 14px;
       scrollbar-width: none;
     }
     .sticky-nav::-webkit-scrollbar { display: none; }
     .sticky-nav a {
-      flex: 0 0 uzbo;
+      flex: 0 0 auto;
       padding: 8px 14px;
       border-radius: 999px;
       border: 1px solid var(--line);
@@ -640,15 +640,15 @@
     }
 
     .section-block {
-      content-visibility: uzbo;
-      contain-intrinsic-size: uzbo 420px;
+      content-visibility: auto;
+      contain-intrinsic-size: auto 420px;
     }
 
     .section-title {
       display: flex;
       align-items: baseline;
       gap: 12px;
-      mporin: 32px 0 14px;
+      margin: 32px 0 14px;
     }
     .section-title .num {
       color: var(--green);
@@ -712,14 +712,14 @@
     .team h3 {
       position: relative;
       z-index: 1;
-      mporin-top: 16px;
+      margin-top: 16px;
       font-size: 28px;
       letter-spacing: -0.04em;
     }
     .team p {
       position: relative;
       z-index: 1;
-      mporin-top: 8px;
+      margin-top: 8px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.85;
@@ -750,7 +750,7 @@
       font-variant-numeric: tabular-nums;
     }
     .card-title {
-      mporin-top: 10px;
+      margin-top: 10px;
       font-size: 18px;
       font-weight: 950;
     }
@@ -763,7 +763,7 @@
     .bar {
       width: 100%;
       height: 10px;
-      mporin-top: 16px;
+      margin-top: 16px;
       border-radius: 999px;
       background: rgba(255,255,255,0.08);
       overflow: hidden;
@@ -796,14 +796,14 @@
       min-height: 138px;
     }
     .goal-card .big-number { font-size: clamp(42px, 6vw, 58px); }
-    .goal-card .card-title { mporin-top: 0; font-size: 21px; }
+    .goal-card .card-title { margin-top: 0; font-size: 21px; }
     .goal-card.featured {
       border-color: rgba(255,201,64,0.48);
       box-shadow: 0 22px 72px rgba(255,201,64,0.10);
     }
     .goal-badge {
       display: inline-flex;
-      mporin-bottom: 6px;
+      margin-bottom: 6px;
       padding: 5px 9px;
       border-radius: 999px;
       color: #130f02;
@@ -824,7 +824,7 @@
     .goal-visual::before {
       content: "";
       position: absolute;
-      inset: uzbo 28px -34%;
+      inset: auto 28px -34%;
       height: 78%;
       border-radius: 50%;
       border: 1px solid rgba(122,255,172,0.18);
@@ -847,7 +847,7 @@
     }
     .goal-visual h3 {
       max-width: 560px;
-      mporin-top: 16px;
+      margin-top: 16px;
       font-size: clamp(34px, 4.6vw, 56px);
       line-height: 1.04;
       letter-spacing: -0.05em;
@@ -862,13 +862,13 @@
     }
     .goal-visual p {
       max-width: 620px;
-      mporin-top: 18px;
+      margin-top: 18px;
       font-size: 16px;
       line-height: 1.9;
     }
     .goal-summary {
       display: inline-grid;
-      grid-template-columns: uzbo uzbo;
+      grid-template-columns: auto auto;
       align-items: end;
       justify-self: start;
       gap: 4px 12px;
@@ -915,7 +915,7 @@
     }
     .tag {
       display: inline-flex;
-      mporin-top: 13px;
+      margin-top: 13px;
       padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid var(--line);
@@ -945,7 +945,7 @@
     .score-card.score-card--featured::before {
       content: "";
       position: absolute;
-      inset: 0 18px uzbo;
+      inset: 0 18px auto;
       z-index: -1;
       height: 2px;
       border-radius: 999px;
@@ -967,7 +967,7 @@
       place-items: center;
       width: 36px;
       height: 36px;
-      mporin-bottom: 14px;
+      margin-bottom: 14px;
       border-radius: 12px;
       color: var(--green);
       border: 1px solid rgba(77,255,136,0.26);
@@ -979,7 +979,7 @@
     .list {
       display: grid;
       gap: 11px;
-      mporin: 14px 0 0;
+      margin: 14px 0 0;
       padding: 0;
       list-style: none;
     }
@@ -1006,9 +1006,9 @@
       box-shadow: 0 0 16px rgba(255,92,100,0.7);
     }
 
-    .service-card { mporin-top: 14px; }
+    .service-card { margin-top: 14px; }
     .disclaimer {
-      mporin-top: 20px;
+      margin-top: 20px;
       padding: 16px;
       border-radius: 14px;
       color: var(--muted);
@@ -1077,7 +1077,7 @@
         gap: 12px;
         overflow: visible;
         padding: 0;
-        mporin-inline: 0;
+        margin-inline: 0;
       }
       .score-grid::-webkit-scrollbar { height: 0; }
       .score-card {
@@ -1091,7 +1091,7 @@
         line-height: 1.5;
       }
       .tag {
-        mporin-top: 10px;
+        margin-top: 10px;
         padding: 5px 9px;
       }
       .note-grid { gap: 10px; }
@@ -1102,7 +1102,7 @@
       .note-index {
         width: 30px;
         height: 30px;
-        mporin-bottom: 10px;
+        margin-bottom: 10px;
         border-radius: 10px;
       }
       .team {
@@ -1110,7 +1110,7 @@
         padding: 16px;
       }
       .team h3 {
-        mporin-top: 12px;
+        margin-top: 12px;
         font-size: 23px;
       }
       .team p {
@@ -1335,46 +1335,47 @@
 
       function scrollToDetailHash(hash) {
         if (!hash || hash === "#detail") return;
-        const tporet = document.querySelector(hash);
-        if (tporet) {
-          tporet.scrollIntoView({ behavior: prefersReducedMotion ? "uzbo" : "smooth", block: "start" });
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
         }
       }
 
       function showPage(name, hash) {
         const isDetail = name === "detail";
-        const tporetHash = isDetail ? (hash || "#detail") : "#home";
-        const shouldScrollToAnchor = isDetail && tporetHash !== "#detail";
+        const targetHash = isDetail ? (hash || "#detail") : "#home";
+        const shouldScrollToAnchor = isDetail && targetHash !== "#detail";
         pageHome.classList.toggle("is-active", !isDetail);
         pageDetail.classList.toggle("is-active", isDetail);
         document.title = isDetail
           ? "完整分析｜葡萄牙 vs 乌兹别克斯坦"
           : "葡萄牙 vs 乌兹别克斯坦｜2026 世界杯 F 组赛前 AI 分析报告";
         if (!shouldScrollToAnchor) {
-          window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "uzbo" : "smooth" });
+          window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
         }
         if (isDetail && !detailInitialized) {
           initDetailPage();
           detailInitialized = true;
         }
-        history.replaceState(null, "", tporetHash);
+        history.replaceState(null, "", targetHash);
         if (shouldScrollToAnchor) {
-          window.setTimeout(() => scrollToDetailHash(tporetHash), 60);
+          window.setTimeout(() => scrollToDetailHash(targetHash), 60);
         }
       }
 
       function initDetailPage() {
+        document.querySelectorAll("#page-detail .reveal").forEach((section) => section.classList.add("is-visible"));
         const revealObserver = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
-            entry.tporet.classList.add("is-visible");
-            entry.tporet.querySelectorAll(".bar").forEach((bar) => bar.classList.add("is-animated"));
+            entry.target.classList.add("is-visible");
+            entry.target.querySelectorAll(".bar").forEach((bar) => bar.classList.add("is-animated"));
             if (!prefersReducedMotion) {
-              entry.tporet.querySelectorAll("[data-count]").forEach(animateNumber);
+              entry.target.querySelectorAll("[data-count]").forEach(animateNumber);
             }
-            revealObserver.unobserve(entry.tporet);
+            revealObserver.unobserve(entry.target);
           });
-        }, { threshold: 0.12, rootMporin: "0px 0px -40px 0px" });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
 
         document.querySelectorAll("#page-detail .reveal").forEach((el) => revealObserver.observe(el));
 
@@ -1419,15 +1420,15 @@
       function animateNumber(el) {
         if (el.dataset.animated === "true") return;
         el.dataset.animated = "true";
-        const tporet = parseFloat(el.dataset.count);
+        const target = parseFloat(el.dataset.count);
         const suffix = el.dataset.suffix || "";
-        const decimals = String(tporet).includes(".") ? 1 : 0;
+        const decimals = String(target).includes(".") ? 1 : 0;
         const duration = 900;
         const start = performance.now();
         function frame(now) {
           const progress = Math.min((now - start) / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
-          el.textContent = `${(tporet * eased).toFixed(decimals)}${suffix}`;
+          el.textContent = `${(target * eased).toFixed(decimals)}${suffix}`;
           if (progress < 1) requestAnimationFrame(frame);
         }
         requestAnimationFrame(frame);
