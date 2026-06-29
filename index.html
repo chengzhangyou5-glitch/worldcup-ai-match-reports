@@ -298,6 +298,137 @@
       box-shadow: 0 18px 48px rgba(0, 0, 0, 0.36), 0 0 24px rgba(108, 182, 255, 0.10);
     }
 
+    .played-archive {
+      grid-column: 1 / -1;
+      margin-top: 8px;
+      padding: 22px;
+      border: 1px solid rgba(245, 211, 107, 0.38);
+      border-radius: 22px;
+      background:
+        linear-gradient(145deg, rgba(245, 211, 107, 0.08), transparent 38%),
+        linear-gradient(180deg, rgba(8, 35, 20, 0.96), rgba(4, 20, 12, 0.94));
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.30), 0 0 0 1px rgba(245, 211, 107, 0.08) inset;
+    }
+
+    .played-archive-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .played-archive-kicker {
+      color: var(--accent-gold);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.14em;
+    }
+
+    .played-archive-title {
+      margin-top: 6px;
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 950;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+
+    .played-archive-copy {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .played-archive-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      flex: 0 0 auto;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid rgba(245, 211, 107, 0.52);
+      border-radius: 999px;
+      color: #16210f;
+      background: linear-gradient(135deg, #fff0a8, var(--gold));
+      font: inherit;
+      font-size: 13px;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(184, 137, 46, 0.18);
+    }
+
+    .played-archive-toggle:hover,
+    .played-archive-toggle:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 34px rgba(184, 137, 46, 0.28);
+      outline: none;
+    }
+
+    .played-archive-toggle .toggle-arrow {
+      display: inline-block;
+      font-size: 17px;
+      line-height: 1;
+      transition: transform 220ms ease;
+    }
+
+    .played-archive.is-expanded .played-archive-toggle .toggle-arrow {
+      transform: rotate(180deg);
+    }
+
+    .played-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards {
+      position: relative;
+      display: block;
+      width: min(100%, 720px);
+      height: 272px;
+      margin: 0 auto 4px;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .match-card {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      min-height: 226px;
+      pointer-events: none;
+      transition: transform 240ms ease, opacity 240ms ease;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(1) {
+      z-index: 3;
+      transform: translate(0, 0) scale(1);
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(2) {
+      z-index: 2;
+      transform: translate(14px, 14px) scale(0.98);
+      opacity: 0.82;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(3) {
+      z-index: 1;
+      transform: translate(28px, 28px) scale(0.96);
+      opacity: 0.58;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(2) > *,
+    .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(3) > * {
+      opacity: 0;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(n + 4) {
+      display: none;
+    }
+
+    .played-archive:not(.is-expanded) .played-cards .card-hover-panel {
+      display: none;
+    }
+
     .history-card {
       position: relative;
       isolation: isolate;
@@ -550,6 +681,35 @@
       main { padding: 34px 0; }
       .grid { grid-template-columns: 1fr; }
       .card { min-height: 170px; }
+      .played-archive {
+        padding: 16px;
+        border-radius: 18px;
+      }
+      .played-archive-head {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .played-archive-toggle {
+        width: 100%;
+      }
+      .played-cards {
+        grid-template-columns: 1fr;
+      }
+      .played-archive:not(.is-expanded) .played-cards {
+        width: calc(100% - 22px);
+        height: 228px;
+        margin-left: 0;
+      }
+      .played-archive:not(.is-expanded) .played-cards .match-card {
+        min-height: 184px;
+      }
+      .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(2) {
+        transform: translate(10px, 10px) scale(0.985);
+      }
+      .played-archive:not(.is-expanded) .played-cards .match-card:nth-child(3) {
+        transform: translate(20px, 20px) scale(0.97);
+      }
       .history-card {
         grid-template-columns: 1fr;
         padding: 24px 20px;
@@ -615,25 +775,25 @@
       <a class="card history-card" href="./history.html">
         <div>
           <div class="history-kicker">PINNED · 历史预测情况汇总</div>
-          <div class="history-title">66 场已赛样本复盘</div>
+          <div class="history-title">72 场已赛样本复盘</div>
           <p class="history-copy">只统计已经结束的比赛，未开赛场次暂不计入。点击查看逐场赛果、胜平负判断、前二比分覆盖和总进球区间表现。</p>
           <div class="pick">查看历史明细 →</div>
         </div>
         <div class="history-stats" aria-label="历史预测数据预览">
           <div class="history-stat">
-            <strong>46/66</strong>
+            <strong>51/72</strong>
             <span>胜平负猜中</span>
-            <small>命中率 69.7%</small>
+            <small>命中率 70.8%</small>
           </div>
           <div class="history-stat">
-            <strong>24/66</strong>
+            <strong>25/72</strong>
             <span>前二比分至少一个中</span>
-            <small>覆盖率 36.4%</small>
+            <small>覆盖率 34.7%</small>
           </div>
           <div class="history-stat">
-            <strong>28/66</strong>
+            <strong>30/72</strong>
             <span>总球数区间</span>
-            <small>命中率 42.4%</small>
+            <small>命中率 41.7%</small>
           </div>
         </div>
       </a>
@@ -645,6 +805,30 @@
       <a class="card match-card is-upcoming" href="./germany-paraguay.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/de.png" alt=""><img src="https://flagcdn.com/w80/py.png" alt=""></div><span class="status-pill upcoming">未赛</span></div><div class="teams">德国 vs 巴拉圭</div><div class="meta">32强赛 · 北京时间 6月30日 04:30</div><div class="result-line"><span>开赛</span><strong>6月30日 04:30</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛前看点</div><div class="check-row"><span>结算方向</span><span class="check-pill info">德国胜</span></div><div class="check-row score-row"><span>参考比分</span><span class="check-pill score-list info">2:0 / 2:1 / 1:0</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill info">0-2球</span></div></div><div class="pick">查看完整报告</div></a>
 
       <a class="card match-card is-upcoming" href="./netherlands-morocco.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/nl.png" alt=""><img src="https://flagcdn.com/w80/ma.png" alt=""></div><span class="status-pill upcoming">未赛</span></div><div class="teams">荷兰 vs 摩洛哥</div><div class="meta">32强赛 · 北京时间 6月30日 09:00</div><div class="result-line"><span>开赛</span><strong>6月30日 09:00</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛前看点</div><div class="check-row"><span>结算方向</span><span class="check-pill info">荷兰胜</span></div><div class="check-row score-row"><span>参考比分</span><span class="check-pill score-list info">1:1 / 2:1 / 1:0</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill info">0-2球</span></div></div><div class="pick">查看完整报告</div></a>
+
+      <section class="played-archive" id="playedArchive" aria-labelledby="playedArchiveTitle">
+        <div class="played-archive-head">
+          <div>
+            <div class="played-archive-kicker">PLAYED · 已赛归档</div>
+            <h2 class="played-archive-title" id="playedArchiveTitle">60 张已赛卡片</h2>
+            <p class="played-archive-copy">已赛内容默认堆叠收起，点击按钮可查看全部历史卡片。</p>
+          </div>
+          <button class="played-archive-toggle" id="playedArchiveToggle" type="button" aria-expanded="false" aria-controls="playedCards">
+            <span class="toggle-label">展开已赛卡片</span><span class="toggle-arrow" aria-hidden="true">⌄</span>
+          </button>
+        </div>
+        <div class="played-cards" id="playedCards">
+      <a class="card match-card is-played" href="./croatia-ghana.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/hr.png" alt=""><img src="https://flagcdn.com/w80/gh.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">克罗地亚 vs 加纳</div><div class="meta">L 组 · 北京时间 6月28日 05:00</div><div class="result-line"><span>赛果</span><strong>2:1</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list miss">1:0 / 1:1</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div></div><div class="pick">查看完整报告</div></a>
+
+      <a class="card match-card is-played" href="./panama-england.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/pa.png" alt=""><img src="https://flagcdn.com/w80/gb-eng.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">巴拿马 vs 英格兰</div><div class="meta">L 组 · 北京时间 6月28日 05:00</div><div class="result-line"><span>赛果</span><strong>0:2</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list hit">0:2 / 0:1</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill hit">命中</span></div></div><div class="pick">查看完整报告</div></a>
+
+      <a class="card match-card is-played" href="./colombia-portugal.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/co.png" alt=""><img src="https://flagcdn.com/w80/pt.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">哥伦比亚 vs 葡萄牙</div><div class="meta">K 组 · 北京时间 6月28日 07:30</div><div class="result-line"><span>赛果</span><strong>0:0</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list miss">1:1 / 2:2</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div></div><div class="pick">查看完整报告</div></a>
+
+      <a class="card match-card is-played" href="./dr-congo-uzbekistan.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/cd.png" alt=""><img src="https://flagcdn.com/w80/uz.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">刚果（金）vs 乌兹别克斯坦</div><div class="meta">K 组 · 北京时间 6月28日 07:30</div><div class="result-line"><span>赛果</span><strong>3:1</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list miss">1:0 / 1:1</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div></div><div class="pick">查看完整报告</div></a>
+
+      <a class="card match-card is-played" href="./algeria-austria.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/dz.png" alt=""><img src="https://flagcdn.com/w80/at.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">阿尔及利亚 vs 奥地利</div><div class="meta">J 组 · 北京时间 6月28日 10:00</div><div class="result-line"><span>赛果</span><strong>3:3</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill miss">未中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list miss">1:2 / 1:1</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div></div><div class="pick">查看完整报告</div></a>
+
+      <a class="card match-card is-played" href="./jordan-argentina.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/jo.png" alt=""><img src="https://flagcdn.com/w80/ar.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">约旦 vs 阿根廷</div><div class="meta">J 组 · 北京时间 6月28日 10:00</div><div class="result-line"><span>赛果</span><strong>1:3</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list miss">0:3 / 0:2</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div></div><div class="pick">查看完整报告</div></a>
 
       <a class="card match-card is-played" href="./norway-france.html"><div class="card-head"><div class="flag-pair" aria-hidden="true"><img src="https://flagcdn.com/w80/no.png" alt=""><img src="https://flagcdn.com/w80/fr.png" alt=""></div><span class="status-pill played">已赛</span></div><div class="teams">挪威 vs 法国</div><div class="meta">I 组 · 北京时间 6月27日 03:00</div><div class="result-line"><span>赛果</span><strong>1:4</strong></div><div class="card-hover-panel" aria-hidden="true"><div class="hover-title">赛后核对</div><div class="check-row"><span>胜平负方向</span><span class="check-pill hit">命中</span></div><div class="check-row score-row"><span>前二比分</span><span class="check-pill score-list miss">1:2 / 1:1</span></div><div class="check-row"><span>总进球区间</span><span class="check-pill miss">未中</span></div></div><div class="pick">查看完整报告</div></a>
 
@@ -1185,12 +1369,28 @@
         </div>
         <div class="pick">查看完整报告</div>
       </a>
+        </div>
+      </section>
     </section>
 
     <footer>
       本页面和单场报告仅作为足球赛前数据分析与娱乐参考，不保证赛果命中，赛果存在不确定性。
     </footer>
   </main>
+  <script>
+    (function () {
+      const archive = document.getElementById('playedArchive');
+      const toggle = document.getElementById('playedArchiveToggle');
+      if (!archive || !toggle) return;
+      const label = toggle.querySelector('.toggle-label');
+      toggle.addEventListener('click', function () {
+        const expanded = archive.classList.toggle('is-expanded');
+        toggle.setAttribute('aria-expanded', String(expanded));
+        if (label) label.textContent = expanded ? '收起已赛卡片' : '展开已赛卡片';
+        if (!expanded) archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    })();
+  </script>
   <script src="./anti-resale.js" defer></script>
 </body>
 </html>
