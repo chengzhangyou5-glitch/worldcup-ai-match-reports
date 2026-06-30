@@ -1,8 +1,10 @@
 (function () {
   const platformName = "闲鱼";
   const officialName = "绿茵数据研究所";
-  const officialId = "xy117456641787";
-  const storageKey = "lvyin-official-account-notice-date";
+  const officialId = "xy426071291828";
+  const avatarAsset = "./assets/xianyu-account-avatar.png";
+  const accountProofAsset = "./assets/xianyu-official-account.jpg";
+  const storageKey = "lvyin-official-account-notice-v2-date";
 
   function todayKey() {
     const now = new Date();
@@ -111,8 +113,10 @@
 
         .notice-card {
           position: relative;
-          width: min(560px, 100%);
-          overflow: hidden;
+          width: min(720px, 100%);
+          max-height: calc(100dvh - 36px);
+          overflow-x: hidden;
+          overflow-y: auto;
           border: 1px solid rgba(245, 211, 107, 0.52);
           border-radius: 22px;
           padding: 26px;
@@ -169,11 +173,95 @@
         .account-box {
           display: grid;
           gap: 8px;
-          margin: 18px 0;
           padding: 16px;
           border: 1px solid rgba(122, 255, 172, 0.20);
           border-radius: 16px;
           background: rgba(0, 0, 0, 0.22);
+        }
+
+        .identity-layout {
+          display: grid;
+          grid-template-columns: minmax(0, 0.9fr) minmax(240px, 1.1fr);
+          gap: 14px;
+          align-items: stretch;
+          margin: 18px 0;
+        }
+
+        .profile-head {
+          display: grid;
+          grid-template-columns: 76px minmax(0, 1fr);
+          gap: 13px;
+          align-items: center;
+          padding-bottom: 12px;
+          margin-bottom: 4px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .profile-avatar {
+          width: 76px;
+          height: 76px;
+          border: 2px solid rgba(245, 211, 107, 0.72);
+          border-radius: 50%;
+          object-fit: cover;
+          object-position: center 24%;
+          background: #d9d9d9;
+          box-shadow: 0 8px 22px rgba(0, 0, 0, 0.30);
+        }
+
+        .profile-meta {
+          min-width: 0;
+        }
+
+        .profile-label {
+          display: block;
+          margin-bottom: 4px;
+          color: #aac9b4;
+          font-size: 12px;
+        }
+
+        .profile-name,
+        .profile-id {
+          display: block;
+          overflow-wrap: anywhere;
+        }
+
+        .profile-name {
+          color: #ffffff;
+          font-size: 18px;
+          line-height: 1.35;
+        }
+
+        .profile-id {
+          margin-top: 3px;
+          color: #f5d36b;
+          font-size: 13px;
+        }
+
+        .account-proof {
+          display: grid;
+          align-content: start;
+          gap: 8px;
+          min-width: 0;
+          margin: 0;
+          padding: 10px;
+          border: 1px solid rgba(245, 211, 107, 0.28);
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .account-proof img {
+          display: block;
+          width: 100%;
+          max-height: 246px;
+          border-radius: 10px;
+          object-fit: contain;
+          background: #f4f4f4;
+        }
+
+        .account-proof figcaption {
+          color: #aac9b4;
+          font-size: 12px;
+          text-align: center;
         }
 
         .account-row {
@@ -188,6 +276,24 @@
           color: #f5d36b;
           text-align: right;
           word-break: break-all;
+        }
+
+        .refund-alert {
+          margin: 0;
+          padding: 13px 14px;
+          border: 1px solid rgba(245, 211, 107, 0.38);
+          border-radius: 14px;
+          color: #eaf5eb;
+          background: rgba(245, 211, 107, 0.09);
+          font-size: 14px;
+          line-height: 1.72;
+        }
+
+        .refund-alert strong {
+          display: block;
+          margin-bottom: 3px;
+          color: #f5d36b;
+          font-size: 15px;
         }
 
         .notice-actions {
@@ -222,6 +328,14 @@
             border-radius: 18px;
           }
 
+          .identity-layout {
+            grid-template-columns: 1fr;
+          }
+
+          .account-proof img {
+            max-height: 300px;
+          }
+
           .account-row {
             display: grid;
             gap: 3px;
@@ -243,13 +357,28 @@
           <button class="notice-close" type="button" aria-label="关闭提示">×</button>
           <div class="notice-kicker">OFFICIAL ACCOUNT</div>
           <h2 class="notice-title" id="notice-title">认准闲鱼官方账号</h2>
-          <p class="notice-copy">为避免买到被倒卖的访问入口，请确认来源是否为下方官方账号。若不是从这个闲鱼账号购买，请立即联系原卖家申请退款。本网站可能不会为非官方来源提供数据更新、访问权限维护或售后保障。</p>
-          <div class="account-box" aria-label="官方售卖账号信息">
-            <div class="account-row"><span>平台</span><strong>${platformName}</strong></div>
-            <div class="account-row"><span>官方昵称</span><strong>${officialName}</strong></div>
-            <div class="account-row"><span>会员名</span><strong>${officialId}</strong></div>
+          <p class="notice-copy">为避免买到被倒卖的访问入口，请通过头像、昵称和会员名核对下方唯一官方售卖账号。</p>
+          <div class="identity-layout" aria-label="官方售卖账号信息">
+            <div class="account-box">
+              <div class="profile-head">
+                <img class="profile-avatar" src="${avatarAsset}" alt="绿茵数据研究所闲鱼账号头像">
+                <div class="profile-meta">
+                  <span class="profile-label">闲鱼官方售卖账号</span>
+                  <strong class="profile-name">${officialName}</strong>
+                  <span class="profile-id">${officialId}</span>
+                </div>
+              </div>
+              <div class="account-row"><span>平台</span><strong>${platformName}</strong></div>
+              <div class="account-row"><span>官方昵称</span><strong>${officialName}</strong></div>
+              <div class="account-row"><span>会员名</span><strong>${officialId}</strong></div>
+            </div>
+            <figure class="account-proof">
+              <img src="${accountProofAsset}" alt="绿茵数据研究所闲鱼账号资料截图">
+              <figcaption>官方账号资料截图，请重点核对昵称与会员名</figcaption>
+            </figure>
           </div>
-          <p class="notice-copy">本网站不得倒卖、转售或二次分发。请通过官方账号获取后续更新与服务说明。</p>
+          <p class="refund-alert"><strong>不是从上述账号购买？请立即申请退款。</strong>请直接联系你购买时的原卖家申请退款。非官方来源属于倒卖行为，可能随时面临停止更新、关闭访问权限等风险，也没有官方售后保障。</p>
+          <p class="notice-copy" style="margin-top: 14px;">本网站不得倒卖、转售或二次分发。请通过官方账号获取后续更新与服务说明。</p>
           <div class="notice-actions">
             <button class="notice-primary" type="button">我已知晓</button>
           </div>
